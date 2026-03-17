@@ -1,16 +1,19 @@
 package net.trilleo.mc.plugins.trihunt
 
 import net.trilleo.mc.plugins.trihunt.registration.CommandRegistrar
+import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.ListenerRegistrar
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
     override fun onEnable() {
-        // Register commands and listeners
+        // Register commands, listeners and GUIs
         logger.info("Registering commands...")
         CommandRegistrar.registerAll(this)
         logger.info("Registering listeners...")
         ListenerRegistrar.registerAll(this)
+        logger.info("Registering GUIs...")
+        GUIManager.registerAll(this)
 
         logger.info("Plugin enabled!")
     }
