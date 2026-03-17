@@ -42,7 +42,7 @@ When a player types `/trihunt` in-game, tab-completion automatically lists all a
 | `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/trihunt reload`)                    |
 | `description`   | `String`       | `""`           | A brief description of what the command does                                |
 | `usage`         | `String`       | `"/<command>"` | Usage hint shown when the command fails                                     |
-| `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (only used for main commands)              |
+| `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (applicable to main commands only)         |
 | `permission`    | `String?`      | `null`         | Permission node required to use the command                                 |
 | `isMainCommand` | `Boolean`      | `false`        | When `true`, the command is registered as a standalone top-level command     |
 
