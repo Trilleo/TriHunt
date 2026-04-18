@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -42,7 +43,7 @@ import org.bukkit.inventory.Inventory
  */
 abstract class PluginGUI(
     val id: String,
-    val title: String,
+    val title: Component,
     val rows: Int = 3
 ) {
 
