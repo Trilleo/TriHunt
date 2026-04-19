@@ -63,5 +63,5 @@ tasks.register<Copy>("copyPlugin") {
 tasks.register<JavaExec>("startServer") {
     dependsOn("copyPlugin")
     workingDir("E:\\Minecraft Dev\\Plugins Dev\\Test Paper Server")
-    classpath("E:\\Minecraft Dev\\Plugins Dev\\Test Paper Server\\paper-1.21.11.jar")
+    classpath("E:\\Minecraft Dev\\Plugins Dev\\Test Paper Server\\paper.jar")
 }
