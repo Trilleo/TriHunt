@@ -1,5 +1,6 @@
-package net.trilleo.mc.plugins.trihunt.commands
+package net.trilleo.mc.plugins.trihunt.commands.moderation
 
+import net.trilleo.mc.plugins.trihunt.Main
 import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
@@ -16,7 +17,7 @@ class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
     permission = "trihunt.reload"
 ) {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        val main = plugin as? net.trilleo.mc.plugins.trihunt.Main
+        val main = plugin as? Main
         if (main == null) {
             sender.sendMessage("Error: Plugin instance type mismatch. Unable to reload configuration.")
             return true
