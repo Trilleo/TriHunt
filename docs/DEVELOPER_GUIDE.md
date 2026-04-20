@@ -1,19 +1,24 @@
 # TriHunt - Developer Guide
 
-This guide explains how to create **commands**, **listeners**, and **GUIs** using TriHunt's registration system. All three follow the same pattern: extend a base class (or implement an interface), place the file in the correct package, and the plugin handles the rest automatically at startup.
+This guide explains how to create **commands**, **listeners**, and **GUIs** using TriHunt's registration system. All
+three follow the same pattern: extend a base class (or implement an interface), place the file in the correct package,
+and the plugin handles the rest automatically at startup.
 
 ## How Auto-Registration Works
 
-TriHunt uses a `PackageScanner` to discover classes at runtime. When the plugin starts, it scans specific packages for concrete (non-abstract) classes and registers them automatically. You never need to edit `plugin.yml` or manually wire anything up.
+TriHunt uses a `PackageScanner` to discover classes at runtime. When the plugin starts, it scans specific packages for
+concrete (non-abstract) classes and registers them automatically. You never need to edit `plugin.yml` or manually wire
+anything up.
 
-| System      | Base Class / Interface    | Package                                          |
-|:------------|:--------------------------|:-------------------------------------------------|
-| Commands    | `PluginCommand`           | `net.trilleo.mc.plugins.trihunt.commands`        |
-| Permissions | *(derived from commands)* | *(automatic — no package needed)*                |
-| Listeners   | `Listener`                | `net.trilleo.mc.plugins.trihunt.listeners`       |
-| GUIs        | `PluginGUI`               | `net.trilleo.mc.plugins.trihunt.guis`            |
+| System      | Base Class / Interface    | Package                                    |
+|:------------|:--------------------------|:-------------------------------------------|
+| Commands    | `PluginCommand`           | `net.trilleo.mc.plugins.trihunt.commands`  |
+| Permissions | *(derived from commands)* | *(automatic — no package needed)*          |
+| Listeners   | `Listener`                | `net.trilleo.mc.plugins.trihunt.listeners` |
+| GUIs        | `PluginGUI`               | `net.trilleo.mc.plugins.trihunt.guis`      |
 
-Subpackages are also scanned, so you can freely organize classes into folders like `commands/game/`, `listeners/player/`, or `guis/menus/`.
+Subpackages are also scanned, so you can freely organize classes into folders like `commands/game/`,
+`listeners/player/`, or `guis/menus/`.
 
 ## Constructor Requirements
 
@@ -32,34 +37,39 @@ The plugin instance is injected automatically when a `JavaPlugin` constructor is
 
 To create a command, extend `PluginCommand` and place the class anywhere inside the `commands` package or a subpackage.
 
-By default every command is registered as a **sub-command** of `/trihunt` (alias `/th`). For example, a command with `name = "reload"` becomes `/trihunt reload`. Set `isMainCommand = true` to register the command as a standalone top-level command instead.
+By default every command is registered as a **sub-command** of `/trihunt` (alias `/th`). For example, a command with
+`name = "reload"` becomes `/trihunt reload`. Set `isMainCommand = true` to register the command as a standalone
+top-level command instead.
 
 When a player types `/trihunt` in-game, tab-completion automatically lists all available sub-commands.
 
 ### Categories
 
-Commands are automatically categorised based on their **subpackage** (folder) inside the `commands` package. The category is used by the built-in `/trihunt help` command to group commands for display.
+Commands are automatically categorised based on their **subpackage** (folder) inside the `commands` package. The
+category is used by the built-in `/trihunt help` command to group commands for display.
 
-| Command Location                       | Category    |
-|:---------------------------------------|:------------|
-| `commands/PingCommand.kt`              | General     |
-| `commands/game/StartCommand.kt`        | Game        |
-| `commands/admin/BanCommand.kt`         | Admin       |
+| Command Location                | Category |
+|:--------------------------------|:---------|
+| `commands/PingCommand.kt`       | General  |
+| `commands/game/StartCommand.kt` | Game     |
+| `commands/admin/BanCommand.kt`  | Admin    |
 
 ### Help Command
 
-The plugin ships with a built-in `/trihunt help` command. It lists every registered command grouped by category, sorted alphabetically within each group, and formatted with colours for readability. Every command should provide a meaningful `description` so the help output is informative.
+The plugin ships with a built-in `/trihunt help` command. It lists every registered command grouped by category, sorted
+alphabetically within each group, and formatted with colours for readability. Every command should provide a meaningful
+`description` so the help output is informative.
 
 ### PluginCommand Properties
 
-| Property        | Type           | Default        | Description                                                                 |
-|:----------------|:---------------|:---------------|:----------------------------------------------------------------------------|
-| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/trihunt reload`)                    |
-| `description`   | `String`       | `""`           | A brief description shown in `/trihunt help` — always provide one           |
-| `usage`         | `String`       | `"/<command>"` | Usage hint shown when the command fails                                     |
-| `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (applicable to main commands only)         |
-| `permission`    | `String?`      | `null`         | Permission node required to use the command (auto-registered at startup)    |
-| `isMainCommand` | `Boolean`      | `false`        | When `true`, the command is registered as a standalone top-level command     |
+| Property        | Type           | Default        | Description                                                              |
+|:----------------|:---------------|:---------------|:-------------------------------------------------------------------------|
+| `name`          | `String`       | *(required)*   | The command name (e.g. `"reload"` for `/trihunt reload`)                 |
+| `description`   | `String`       | `""`           | A brief description shown in `/trihunt help` — always provide one        |
+| `usage`         | `String`       | `"/<command>"` | Usage hint shown when the command fails                                  |
+| `aliases`       | `List<String>` | `emptyList()`  | Alternative names for the command (applicable to main commands only)     |
+| `permission`    | `String?`      | `null`         | Permission node required to use the command (auto-registered at startup) |
+| `isMainCommand` | `Boolean`      | `false`        | When `true`, the command is registered as a standalone top-level command |
 
 ### Automatic Permission Registration
 
@@ -198,7 +208,8 @@ class GlobalToolCommand : PluginCommand(
 
 ## Listeners
 
-To create a listener, implement Bukkit's `Listener` interface and place the class anywhere inside the `listeners` package or a subpackage.
+To create a listener, implement Bukkit's `Listener` interface and place the class anywhere inside the `listeners`
+package or a subpackage.
 
 ### Methods
 
@@ -247,7 +258,8 @@ class DeathListener(private val plugin: JavaPlugin) : Listener {
 
 ## GUIs
 
-To create a GUI (chest-based inventory menu), extend `PluginGUI` and place the class anywhere inside the `guis` package or a subpackage.
+To create a GUI (chest-based inventory menu), extend `PluginGUI` and place the class anywhere inside the `guis` package
+or a subpackage.
 
 ### PluginGUI Properties
 
@@ -259,11 +271,11 @@ To create a GUI (chest-based inventory menu), extend `PluginGUI` and place the c
 
 ### Methods to Override
 
-| Method    | Required | Description                                          |
-|:----------|:---------|:-----------------------------------------------------|
-| `setup`   | Yes      | Populate the inventory with items before it opens    |
-| `onClick` | No       | Handle click events (clicks are cancelled by default)|
-| `onClose` | No       | Handle cleanup when the GUI is closed                |
+| Method    | Required | Description                                           |
+|:----------|:---------|:------------------------------------------------------|
+| `setup`   | Yes      | Populate the inventory with items before it opens     |
+| `onClick` | No       | Handle click events (clicks are cancelled by default) |
+| `onClose` | No       | Handle cleanup when the GUI is closed                 |
 
 ### Opening a GUI
 
