@@ -1,8 +1,9 @@
 # TriHunt - Developer Guide
 
-This guide explains how to create **commands**, **listeners**, and **GUIs** using TriHunt's registration system. All
-three follow the same pattern: extend a base class (or implement an interface), place the file in the correct package,
-and the plugin handles the rest automatically at startup.
+This guide explains how to create **commands**, **listeners**, **GUIs**, and work with the **configuration** system
+using TriHunt's registration system. Commands, listeners, and GUIs all follow the same pattern: extend a base
+class (or implement an interface), place the file in the correct package, and the plugin handles the rest
+automatically at startup. The configuration system provides typed access to `config.yml` values.
 
 ## How Auto-Registration Works
 
@@ -10,12 +11,13 @@ TriHunt uses a `PackageScanner` to discover classes at runtime. When the plugin 
 concrete (non-abstract) classes and registers them automatically. You never need to edit `plugin.yml` or manually wire
 anything up.
 
-| System      | Base Class / Interface    | Package                                    |
-|:------------|:--------------------------|:-------------------------------------------|
-| Commands    | `PluginCommand`           | `net.trilleo.mc.plugins.trihunt.commands`  |
-| Permissions | *(derived from commands)* | *(automatic — no package needed)*          |
-| Listeners   | `Listener`                | `net.trilleo.mc.plugins.trihunt.listeners` |
-| GUIs        | `PluginGUI`               | `net.trilleo.mc.plugins.trihunt.guis`      |
+| System        | Base Class / Interface    | Package                                    |
+|:--------------|:--------------------------|:-------------------------------------------|
+| Commands      | `PluginCommand`           | `net.trilleo.mc.plugins.trihunt.commands`  |
+| Permissions   | *(derived from commands)* | *(automatic — no package needed)*          |
+| Listeners     | `Listener`                | `net.trilleo.mc.plugins.trihunt.listeners` |
+| GUIs          | `PluginGUI`               | `net.trilleo.mc.plugins.trihunt.guis`      |
+| Configuration | `PluginConfig`            | `net.trilleo.mc.plugins.trihunt.config`    |
 
 Subpackages are also scanned, so you can freely organize classes into folders like `commands/game/`,
 `listeners/player/`, or `guis/menus/`.
@@ -173,7 +175,12 @@ class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
     permission = "trihunt.reload"
 ) {
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
-        plugin.reloadConfig()
+        val main = plugin as? net.trilleo.mc.plugins.trihunt.Main
+        if (main == null) {
+            sender.sendMessage("Error: Plugin instance type mismatch. Unable to reload configuration.")
+            return true
+        }
+        main.pluginConfig.reload()
         sender.sendMessage("Configuration reloaded!")
         return true
     }
@@ -452,6 +459,196 @@ class RewardsCommand : PluginCommand(
         }
         GUIManager.open(sender, "rewards")
         return true
+    }
+}
+```
+
+---
+
+## ItemStack Builder DSL
+
+Building `ItemStack` instances with custom names, lore, enchantments, and flags normally requires verbose
+boilerplate. The `itemStack` DSL in `net.trilleo.mc.plugins.trihunt.utils` lets you create fully configured items in a
+single expression. All text is parsed through
+[MiniMessage](https://docs.advntr.dev/minimessage/index.html), so rich formatting tags like `<bold>`, `<red>`,
+and `<gradient>` work out of the box.
+
+### Before (vanilla API)
+
+```kotlin
+val item = ItemStack(Material.DIAMOND_SWORD)
+val meta = item.itemMeta
+meta.displayName(MiniMessage.miniMessage().deserialize("<bold><gradient:gold:yellow>Excalibur</gradient></bold>"))
+meta.lore(
+    listOf(
+        MiniMessage.miniMessage().deserialize("<gray>A legendary blade"),
+        MiniMessage.miniMessage().deserialize("<gray>Damage: <red>+20")
+    )
+)
+meta.addEnchant(Enchantment.SHARPNESS, 5, true)
+meta.isUnbreakable = true
+meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+item.itemMeta = meta
+```
+
+### After (using the DSL)
+
+```kotlin
+import net.trilleo.mc.plugins.trihunt.utils.itemStack
+
+val item = itemStack(Material.DIAMOND_SWORD) {
+    name("<bold><gradient:gold:yellow>Excalibur</gradient></bold>")
+    lore("<gray>A legendary blade", "<gray>Damage: <red>+20")
+    enchant(Enchantment.SHARPNESS, 5)
+    unbreakable(true)
+    flag(ItemFlag.HIDE_ENCHANTS)
+}
+```
+
+### Builder Methods
+
+| Method            | Signature                   | Description                                     |
+|:------------------|:----------------------------|:------------------------------------------------|
+| `name`            | `name(String)`              | Set the display name (MiniMessage)              |
+| `lore`            | `lore(vararg String)`       | Set lore lines (each parsed with MiniMessage)   |
+| `enchant`         | `enchant(Enchantment, Int)` | Add an enchantment at the given level           |
+| `unbreakable`     | `unbreakable(Boolean)`      | Make the item unbreakable                       |
+| `amount`          | `amount(Int)`               | Set the stack size                              |
+| `flag`            | `flag(vararg ItemFlag)`     | Add one or more item flags                      |
+| `customModelData` | `customModelData(Int)`      | Set the custom model data value                 |
+| `meta`            | `meta(ItemMeta.() -> Unit)` | Escape hatch for direct `ItemMeta` manipulation |
+
+### Escape Hatch Example
+
+For advanced use-cases not covered by the builder methods, the `meta` block gives you direct access to the
+`ItemMeta`. Any changes made inside `meta` are applied **after** all other builder properties, so they take
+precedence:
+
+```kotlin
+import net.trilleo.mc.plugins.trihunt.utils.itemStack
+
+val head = itemStack(Material.PLAYER_HEAD) {
+    name("<yellow>Custom Head")
+    meta {
+        // 'this' is the ItemMeta — cast and use any Paper API method
+        (this as org.bukkit.inventory.meta.SkullMeta)
+            .owningPlayer = org.bukkit.Bukkit.getOfflinePlayer("Notch")
+    }
+}
+```
+
+---
+
+## Configuration
+
+TriHunt provides a typed configuration wrapper — `PluginConfig` — around the standard Bukkit `config.yml`. It
+lives in the `net.trilleo.mc.plugins.trihunt.config` package and is created automatically when the plugin starts.
+
+### How It Works
+
+1. On first run, the default `config.yml` bundled inside the JAR (`src/main/resources/config.yml`) is copied to the
+   plugin's data folder.
+2. `PluginConfig` loads the YAML values into memory and exposes them through typed getter methods.
+3. At any time you can call `reload()` to re-read the file from disk, picking up changes made while the server is
+   running.
+
+The plugin's `Main` class exposes the instance as `pluginConfig`:
+
+```kotlin
+class Main : JavaPlugin() {
+    lateinit var pluginConfig: PluginConfig
+        private set
+
+    override fun onEnable() {
+        pluginConfig = PluginConfig(this)
+        // ...
+    }
+}
+```
+
+### Default config.yml
+
+Place default values in `src/main/resources/config.yml`. They are copied to the server's plugin data folder on first
+run:
+
+```yaml
+# TriHunt Configuration
+
+# A friendly prefix shown before plugin messages
+message-prefix: "[TriHunt]"
+```
+
+### Typed Getters
+
+`PluginConfig` provides the following typed getter methods. Each method accepts a YAML path and a default value that
+is returned when the key is absent or has the wrong type:
+
+| Method          | Signature                           | Description                                       |
+|:----------------|:------------------------------------|:--------------------------------------------------|
+| `getString`     | `getString(path, default = "")`     | Returns a `String` value                          |
+| `getInt`        | `getInt(path, default = 0)`         | Returns an `Int` value                            |
+| `getDouble`     | `getDouble(path, default = 0.0)`    | Returns a `Double` value                          |
+| `getBoolean`    | `getBoolean(path, default = false)` | Returns a `Boolean` value                         |
+| `getStringList` | `getStringList(path)`               | Returns a `List<String>` (empty list if absent)   |
+| `contains`      | `contains(path)`                    | Returns `true` when the path exists in the config |
+
+### Reloading
+
+Call `reload()` to re-read `config.yml` from disk without restarting the server. The method copies any new default
+keys into the file, saves it, and refreshes the in-memory values:
+
+```kotlin
+pluginConfig.reload()
+```
+
+The built-in `/trihunt reload` command already calls this method.
+
+### Accessing the Config from a Command
+
+Cast the injected `JavaPlugin` to `Main` to reach `pluginConfig`:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.commands
+
+import net.trilleo.mc.plugins.trihunt.Main
+import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
+import org.bukkit.command.CommandSender
+import org.bukkit.plugin.java.JavaPlugin
+
+class PrefixCommand(private val plugin: JavaPlugin) : PluginCommand(
+    name = "prefix",
+    description = "Show the configured message prefix",
+    permission = "trihunt.prefix"
+) {
+    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
+        val main = plugin as? Main ?: return true
+        val prefix = main.pluginConfig.getString("message-prefix", "[TriHunt]")
+        sender.sendMessage("Current prefix: $prefix")
+        return true
+    }
+}
+```
+
+### Accessing the Config from a Listener
+
+The same pattern works for listeners — accept a `JavaPlugin` constructor parameter and cast to `Main`:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.listeners
+
+import net.trilleo.mc.plugins.trihunt.Main
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.plugin.java.JavaPlugin
+
+class WelcomeListener(private val plugin: JavaPlugin) : Listener {
+
+    @EventHandler
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        val main = plugin as? Main ?: return
+        val prefix = main.pluginConfig.getString("message-prefix", "[TriHunt]")
+        event.player.sendMessage("$prefix Welcome, ${event.player.name}!")
     }
 }
 ```

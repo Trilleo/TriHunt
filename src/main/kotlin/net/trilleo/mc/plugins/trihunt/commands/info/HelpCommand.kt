@@ -1,4 +1,4 @@
-package net.trilleo.mc.plugins.trihunt.commands
+package net.trilleo.mc.plugins.trihunt.commands.info
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
