@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.trihunt
 
+import net.trilleo.mc.plugins.trihunt.config.PluginConfig
 import net.trilleo.mc.plugins.trihunt.registration.CommandRegistrar
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.ListenerRegistrar
@@ -7,7 +8,16 @@ import net.trilleo.mc.plugins.trihunt.registration.PermissionRegistrar
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
+
+    /** Typed configuration wrapper – available after [onEnable]. */
+    lateinit var pluginConfig: PluginConfig
+        private set
+
     override fun onEnable() {
+        // Load configuration
+        logger.info("Loading configuration...")
+        pluginConfig = PluginConfig(this)
+
         // Register commands, listeners and GUIs
         logger.info("Registering commands...")
         CommandRegistrar.registerAll(this)
