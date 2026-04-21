@@ -3,6 +3,7 @@ package net.trilleo.mc.plugins.trihunt.guis
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.trilleo.mc.plugins.trihunt.registration.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import org.bukkit.Material
@@ -15,7 +16,8 @@ import org.bukkit.inventory.ItemFlag
 class MainUI : PluginGUI(
     id = "main",
     title = Component.text { "TriHunt Main UI" }.color(NamedTextColor.GOLD),
-    rows = 5
+    rows = 5,
+    fillMode = FillMode.LIGHT
 ) {
     override fun setup(player: Player, inventory: Inventory) {
     }
