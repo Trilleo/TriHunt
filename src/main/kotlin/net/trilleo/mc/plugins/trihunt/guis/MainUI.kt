@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemFlag
 
 class MainUI : PluginGUI(
     id = "main",
-    title = Component.text { "TriHunt Main UI" }.color(NamedTextColor.GOLD),
+    title = Component.text("TriHunt Main UI").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD),
     rows = 5,
     fillMode = FillMode.LIGHT
 ) {
