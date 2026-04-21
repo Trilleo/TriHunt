@@ -37,8 +37,8 @@ import java.util.UUID
  * class RewardsGUI : PagedPluginGUI(
  *     id = "rewards",
  *     title = Component.text("Rewards"),
- *     rows = 6
- *     fillMode: FillMode = FillMode.NONE
+ *     rows = 6,
+ *     fillMode = FillMode.NONE
  * ) {
  *     override fun getItems(player: Player): List<ItemStack> {
  *         return List(100) { index ->
