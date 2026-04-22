@@ -1,8 +1,8 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
+import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -149,6 +149,8 @@ abstract class PagedPluginGUI(
     private fun renderPage(player: Player, inventory: Inventory, page: Int) {
         inventory.clear()
 
+        fillInventory(this, inventory)
+
         val items = getItems(player)
         val totalPages = totalPages(items.size)
         val start = page * contentSlots
@@ -160,7 +162,10 @@ abstract class PagedPluginGUI(
 
         // Navigation row – fill all slots with gray stained glass panes first
         for (offset in 0 until ROW_SIZE) {
-            inventory.setItem(navRowStart + offset, createNavItem(Material.GRAY_STAINED_GLASS_PANE, Component.empty()))
+            inventory.setItem(navRowStart + offset, itemStack(Material.GRAY_STAINED_GLASS_PANE) {
+                name(" ")
+                hideTooltip(true)
+            })
         }
 
         // Place navigation items on top of the filler
@@ -168,7 +173,7 @@ abstract class PagedPluginGUI(
             inventory.setItem(
                 navRowStart + PREVIOUS_OFFSET, createNavItem(
                     Material.ARROW,
-                    Component.text("Previous Page", NamedTextColor.YELLOW)
+                    "<yellow>Previous Page"
                 )
             )
         }
@@ -176,7 +181,7 @@ abstract class PagedPluginGUI(
         inventory.setItem(
             navRowStart + PAGE_INDICATOR_OFFSET, createNavItem(
                 Material.PAPER,
-                Component.text("Page ${page + 1}/$totalPages", NamedTextColor.WHITE)
+                "<white>Page ${page + 1}/$totalPages"
             )
         )
 
@@ -184,19 +189,17 @@ abstract class PagedPluginGUI(
             inventory.setItem(
                 navRowStart + NEXT_OFFSET, createNavItem(
                     Material.ARROW,
-                    Component.text("Next Page", NamedTextColor.YELLOW)
+                    "<yellow>Next Page"
                 )
             )
         }
     }
 
     /** Creates a navigation item with the given material and display name. */
-    private fun createNavItem(material: Material, name: Component): ItemStack {
-        val item = ItemStack(material)
-        val meta = item.itemMeta
-        meta.displayName(name)
-        item.itemMeta = meta
-        return item
+    private fun createNavItem(material: Material, name: String): ItemStack {
+        return itemStack(material) {
+            this.name(name)
+        }
     }
 
     companion object {
@@ -204,5 +207,24 @@ abstract class PagedPluginGUI(
         private const val PREVIOUS_OFFSET = 0
         private const val PAGE_INDICATOR_OFFSET = 4
         private const val NEXT_OFFSET = 8
+    }
+
+    /**
+     * Pre-fills all slots in [inventory] with a filler glass pane determined
+     * by the GUI's [FillMode].  Does nothing when the mode is [FillMode.NONE].
+     */
+    private fun fillInventory(gui: PluginGUI, inventory: Inventory) {
+        val material = when (gui.fillMode) {
+            FillMode.LIGHT -> Material.WHITE_STAINED_GLASS_PANE
+            FillMode.DARK -> Material.BLACK_STAINED_GLASS_PANE
+            FillMode.NONE -> return
+        }
+        val filler = itemStack(material) {
+            name(" ")
+            hideTooltip(true)
+        }
+        for (slot in 0 until inventory.size) {
+            inventory.setItem(slot, filler.clone())
+        }
     }
 }
