@@ -175,11 +175,12 @@ object CommandRegistrar {
                 sender.sendPrefixed(
                     "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
                 )
+            } else {
+                sender.sendMessage("Unknown sub-command: ${args[0]}")
+                sender.sendMessage(
+                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
+                )
             }
-            sender.sendMessage("Unknown sub-command: ${args[0]}")
-            sender.sendMessage(
-                "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-            )
             return true
         }
 
