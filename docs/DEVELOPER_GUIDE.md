@@ -1,7 +1,7 @@
 # TriHunt - Developer Guide
 
-This guide explains how to create **commands**, **listeners**, **GUIs**, and work with the **configuration** system
-using TriHunt's registration system. Commands, listeners, and GUIs all follow the same pattern: extend a base
+This guide explains how to create **commands**, **listeners**, **GUIs**, **tasks**, and work with the **configuration** system
+using TriHunt's registration system. Commands, listeners, GUIs, and tasks all follow the same pattern: extend a base
 class (or implement an interface), place the file in the correct package, and the plugin handles the rest
 automatically at startup. The configuration system provides typed access to `config.yml` values.
 
@@ -17,14 +17,17 @@ anything up.
 | Permissions   | *(derived from commands)* | *(automatic — no package needed)*          |
 | Listeners     | `Listener`                | `net.trilleo.mc.plugins.trihunt.listeners` |
 | GUIs          | `PluginGUI`               | `net.trilleo.mc.plugins.trihunt.guis`      |
+| Tasks         | `PluginTask`              | `net.trilleo.mc.plugins.trihunt.tasks`     |
 | Configuration | `PluginConfig`            | `net.trilleo.mc.plugins.trihunt.config`    |
+| Player Data   | `PlayerData`              | `net.trilleo.mc.plugins.trihunt.data`      |
+| Server Data   | `ServerData`              | `net.trilleo.mc.plugins.trihunt.data`      |
 
 Subpackages are also scanned, so you can freely organize classes into folders like `commands/game/`,
 `listeners/player/`, or `guis/menus/`.
 
 ## Constructor Requirements
 
-Every command, listener, and GUI class must have one of the following constructors:
+Every command, listener, GUI, and task class must have one of the following constructors:
 
 | Constructor                          | When to Use                                   |
 |:-------------------------------------|:----------------------------------------------|
@@ -309,7 +312,7 @@ GUIManager.open(player, "settings")
 ```kotlin
 package net.trilleo.mc.plugins.trihunt.guis
 
-import net.trilleo.mc.plugins.trihunt.registration.FillMode
+import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -470,6 +473,103 @@ class RewardsCommand : PluginCommand(
         }
         GUIManager.open(sender, "rewards")
         return true
+    }
+}
+```
+
+---
+
+## Tasks
+
+To create a scheduled task, extend `PluginTask` and place the class anywhere inside the `tasks` package or a
+subpackage. The task is automatically discovered, instantiated, and scheduled by `TaskRegistrar` when the plugin
+enables. All tasks are cancelled automatically when the plugin disables.
+
+### PluginTask Properties
+
+| Property | Type      | Default | Description                                                                                   |
+|:---------|:----------|:--------|:----------------------------------------------------------------------------------------------|
+| `delay`  | `Long`    | `0`     | Delay in ticks before the task first runs (20 ticks = 1 second)                               |
+| `period` | `Long`    | `-1`    | Ticks between subsequent runs; use any negative value to schedule the task as a one-shot task |
+| `async`  | `Boolean` | `false` | When `true`, the task runs off the main server thread (suitable for I/O or heavy computation) |
+
+### Scheduling Behaviour
+
+The combination of `period` and `async` determines which Bukkit scheduler method is used:
+
+| `async` | `period >= 0` | Bukkit call                  |
+|:--------|:--------------|:-----------------------------|
+| `false` | Yes           | `runTaskTimer`               |
+| `true`  | Yes           | `runTaskTimerAsynchronously` |
+| `false` | No            | `runTaskLater`               |
+| `true`  | No            | `runTaskLaterAsynchronously` |
+
+### Methods to Override
+
+| Method | Required | Description                                                          |
+|:-------|:---------|:---------------------------------------------------------------------|
+| `run`  | Yes      | Called once (one-shot) or repeatedly (repeating) when the task fires |
+
+### Example (Repeating Sync Task)
+
+This task broadcasts a message to all players every 5 minutes:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.tasks
+
+import net.trilleo.mc.plugins.trihunt.registration.PluginTask
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Bukkit
+
+class BroadcastTask : PluginTask(
+    delay = 6000L,
+    period = 6000L
+) {
+    override fun run() {
+        Bukkit.broadcast(
+            Component.text("[TriHunt] ", NamedTextColor.GOLD)
+                .append(Component.text("The server is running smoothly!", NamedTextColor.YELLOW))
+        )
+    }
+}
+```
+
+### Example (One-Shot Async Task)
+
+This task runs once 5 seconds after the plugin enables, off the main thread:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.tasks
+
+import net.trilleo.mc.plugins.trihunt.registration.PluginTask
+
+class CleanupTask : PluginTask(
+    delay = 100L,
+    async = true
+) {
+    override fun run() {
+        // perform I/O or heavy computation here without blocking the server
+    }
+}
+```
+
+### Example with Plugin Instance
+
+When you need access to the plugin, declare a `JavaPlugin` constructor parameter:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.tasks
+
+import net.trilleo.mc.plugins.trihunt.registration.PluginTask
+import org.bukkit.plugin.java.JavaPlugin
+
+class MetricsTask(private val plugin: JavaPlugin) : PluginTask(
+    delay = 200L,
+    period = 200L
+) {
+    override fun run() {
+        plugin.logger.info("Online players: ${plugin.server.onlinePlayers.size}")
     }
 }
 ```
@@ -996,77 +1096,32 @@ player.sendPlayerListHeaderAndFooter(Component.empty(), Component.empty())
 
 ---
 
-## ItemStack Builder DSL
+## Utilities
 
-Building `ItemStack` instances with custom names, lore, enchantments, and flags normally requires verbose
-boilerplate. The `itemStack` DSL in `net.trilleo.mc.plugins.trihunt.utils` lets you create fully configured items in a
-single expression. All text is parsed through
-[MiniMessage](https://docs.advntr.dev/minimessage/index.html), so rich formatting tags like `<bold>`, `<red>`,
-and `<gradient>` work out of the box.
+The `utils` package (`net.trilleo.mc.plugins.trihunt.utils`) contains helper classes and functions that reduce
+boilerplate across the plugin. See the [Utility Guide](UTILITY_GUIDE.md) for full documentation on the
+`itemStack` DSL builder and `CountdownUtil`.
 
-### Before (vanilla API)
+### Enums
 
-```kotlin
-val item = ItemStack(Material.DIAMOND_SWORD)
-val meta = item.itemMeta
-meta.displayName(MiniMessage.miniMessage().deserialize("<bold><gradient:gold:yellow>Excalibur</gradient></bold>"))
-meta.lore(
-    listOf(
-        MiniMessage.miniMessage().deserialize("<gray>A legendary blade"),
-        MiniMessage.miniMessage().deserialize("<gray>Damage: <red>+20")
-    )
-)
-meta.addEnchant(Enchantment.SHARPNESS, 5, true)
-meta.isUnbreakable = true
-meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-item.itemMeta = meta
-```
+Plugin-wide enums live in `net.trilleo.mc.plugins.trihunt.enums`.
 
-### After (using the DSL)
+#### DisplayLocation
 
-```kotlin
-import net.trilleo.mc.plugins.trihunt.utils.itemStack
+`DisplayLocation` is used by `CountdownUtil` to control where countdown messages are rendered for the player.
 
-val item = itemStack(Material.DIAMOND_SWORD) {
-    name("<bold><gradient:gold:yellow>Excalibur</gradient></bold>")
-    lore("<gray>A legendary blade", "<gray>Damage: <red>+20")
-    enchant(Enchantment.SHARPNESS, 5)
-    unbreakable(true)
-    flag(ItemFlag.HIDE_ENCHANTS)
-}
-```
+| Value        | Behaviour                                              |
+|:-------------|:-------------------------------------------------------|
+| `NONE`       | No message is displayed                                |
+| `CHAT`       | Message is sent to the player's chat                   |
+| `TITLE`      | Message is shown as a screen title                     |
+| `BOSS_BAR`   | Message is shown in a boss bar that depletes over time |
+| `ACTION_BAR` | Message is shown above the hotbar                      |
 
-### Builder Methods
+#### FillMode
 
-| Method            | Signature                   | Description                                     |
-|:------------------|:----------------------------|:------------------------------------------------|
-| `name`            | `name(String)`              | Set the display name (MiniMessage)              |
-| `lore`            | `lore(vararg String)`       | Set lore lines (each parsed with MiniMessage)   |
-| `enchant`         | `enchant(Enchantment, Int)` | Add an enchantment at the given level           |
-| `unbreakable`     | `unbreakable(Boolean)`      | Make the item unbreakable                       |
-| `amount`          | `amount(Int)`               | Set the stack size                              |
-| `flag`            | `flag(vararg ItemFlag)`     | Add one or more item flags                      |
-| `customModelData` | `customModelData(Int)`      | Set the custom model data value                 |
-| `meta`            | `meta(ItemMeta.() -> Unit)` | Escape hatch for direct `ItemMeta` manipulation |
-
-### Escape Hatch Example
-
-For advanced use-cases not covered by the builder methods, the `meta` block gives you direct access to the
-`ItemMeta`. Any changes made inside `meta` are applied **after** all other builder properties, so they take
-precedence:
-
-```kotlin
-import net.trilleo.mc.plugins.trihunt.utils.itemStack
-
-val head = itemStack(Material.PLAYER_HEAD) {
-    name("<yellow>Custom Head")
-    meta {
-        // 'this' is the ItemMeta — cast and use any Paper API method
-        (this as org.bukkit.inventory.meta.SkullMeta)
-            .owningPlayer = org.bukkit.Bukkit.getOfflinePlayer("Notch")
-    }
-}
-```
+`FillMode` is used by `PluginGUI` and `PagedPluginGUI` to control how empty inventory slots are pre-filled before
+`setup` is called. See the [GUIs section](#guis) for details.
 
 ---
 
@@ -1180,6 +1235,195 @@ class WelcomeListener(private val plugin: JavaPlugin) : Listener {
         val main = plugin as? Main ?: return
         val prefix = main.pluginConfig.getString("message-prefix", "[TriHunt]")
         event.player.sendMessage("$prefix Welcome, ${event.player.name}!")
+    }
+}
+```
+
+---
+
+## Player Data
+
+`PlayerDataManager` provides automatic, per-player JSON persistence. Data is loaded from disk when a player joins and
+written back when they quit. A fallback `saveAll()` call in `onDisable` protects data for any players still online when
+the server shuts down.
+
+JSON files are stored at `<dataFolder>/playerdata/<uuid>.json`.
+
+The manager is already initialised in `Main.onEnable` and requires no further setup for basic use.
+
+### Basic Usage
+
+Retrieve a player's data container from anywhere with a `Player` reference:
+
+```kotlin
+import net.trilleo.mc.plugins.trihunt.data.PlayerDataManager
+
+val data = PlayerDataManager.get(player)
+val kills = data.getInt("kills")
+data.set("kills", kills + 1)
+```
+
+### Typed Getters and Setters
+
+| Method         | Signature                          | Description                                                                 |
+|:---------------|:-----------------------------------|:----------------------------------------------------------------------------|
+| `getString`    | `getString(key, default = "")`     | Returns a `String` value                                                    |
+| `getInt`       | `getInt(key, default = 0)`         | Returns an `Int` value                                                      |
+| `getDouble`    | `getDouble(key, default = 0.0)`    | Returns a `Double` value                                                    |
+| `getBoolean`   | `getBoolean(key, default = false)` | Returns a `Boolean` value                                                   |
+| `getJsonArray` | `getJsonArray(key)`                | Returns a `JsonArray` value, or an empty `JsonArray` when absent            |
+| `set`          | `set(key, value)`                  | Stores a `String`, `Int`, `Double`, `Boolean`, `JsonArray`, or `JsonObject` |
+| `remove`       | `remove(key)`                      | Removes the entry at `key`                                                  |
+| `has`          | `has(key)`                         | Returns `true` when `key` exists                                            |
+
+### Custom Subclass
+
+Extend `PlayerData` to add strongly-typed Kotlin properties:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.data
+
+import java.util.UUID
+
+class MyPlayerData(uuid: UUID) : PlayerData(uuid) {
+    var kills: Int
+        get() = getInt("kills")
+        set(value) = set("kills", value)
+
+    var lastSeen: String
+        get() = getString("lastSeen")
+        set(value) = set("lastSeen", value)
+}
+```
+
+Register the factory **before** `PlayerDataManager.init` is called (i.e. before it is called in `Main.onEnable`).
+The best place to do this is at the top of `onEnable`, before the call chain reaches the data manager:
+
+```kotlin
+override fun onEnable() {
+    PlayerDataManager.setFactory { uuid -> MyPlayerData(uuid) }
+    // ... rest of onEnable
+}
+```
+
+Then cast the result of `get`:
+
+```kotlin
+val data = PlayerDataManager.get(player) as MyPlayerData
+data.kills++
+```
+
+### Example Listener
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.listeners
+
+import net.trilleo.mc.plugins.trihunt.data.PlayerDataManager
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
+
+class KillTracker : Listener {
+
+    @EventHandler
+    fun onPlayerDeath(event: PlayerDeathEvent) {
+        val killer = event.player.killer ?: return
+        val data = PlayerDataManager.get(killer)
+        data.set("kills", data.getInt("kills") + 1)
+    }
+}
+```
+
+---
+
+## Server Data
+
+`ServerDataManager` provides a single server-wide JSON data container. The data is loaded when the plugin enables and
+saved when it disables.
+
+The JSON file is stored at `<dataFolder>/serverdata.json`.
+
+The manager is already initialised in `Main.onEnable` and requires no further setup for basic use.
+
+### Basic Usage
+
+Retrieve the server data container from anywhere:
+
+```kotlin
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
+
+val data = ServerDataManager.get()
+val events = data.getInt("eventCount")
+data.set("eventCount", events + 1)
+```
+
+### Typed Getters and Setters
+
+`ServerData` exposes the same typed methods as `PlayerData`:
+
+| Method         | Signature                          | Description                                                                 |
+|:---------------|:-----------------------------------|:----------------------------------------------------------------------------|
+| `getString`    | `getString(key, default = "")`     | Returns a `String` value                                                    |
+| `getInt`       | `getInt(key, default = 0)`         | Returns an `Int` value                                                      |
+| `getDouble`    | `getDouble(key, default = 0.0)`    | Returns a `Double` value                                                    |
+| `getBoolean`   | `getBoolean(key, default = false)` | Returns a `Boolean` value                                                   |
+| `getJsonArray` | `getJsonArray(key)`                | Returns a `JsonArray` value, or an empty `JsonArray` when absent            |
+| `set`          | `set(key, value)`                  | Stores a `String`, `Int`, `Double`, `Boolean`, `JsonArray`, or `JsonObject` |
+| `remove`       | `remove(key)`                      | Removes the entry at `key`                                                  |
+| `has`          | `has(key)`                         | Returns `true` when `key` exists                                            |
+
+### Custom Subclass
+
+Extend `ServerData` to add strongly-typed Kotlin properties:
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.data
+
+class MyServerData : ServerData() {
+    var totalKills: Int
+        get() = getInt("totalKills")
+        set(value) = set("totalKills", value)
+
+    var serverSeason: String
+        get() = getString("serverSeason", "1")
+        set(value) = set("serverSeason", value)
+}
+```
+
+Register the factory **before** `ServerDataManager.init` is called in `Main.onEnable`:
+
+```kotlin
+override fun onEnable() {
+    ServerDataManager.setFactory { MyServerData() }
+    // ... rest of onEnable
+}
+```
+
+Then cast the result of `get`:
+
+```kotlin
+val data = ServerDataManager.get() as MyServerData
+data.totalKills++
+```
+
+### Example Command
+
+```kotlin
+package net.trilleo.mc.plugins.trihunt.commands
+
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
+import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
+import org.bukkit.command.CommandSender
+
+class StatsCommand : PluginCommand(
+    name = "stats",
+    description = "Show server-wide statistics",
+    permission = "trihunt.stats"
+) {
+    override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
+        val data = ServerDataManager.get()
+        sender.sendMessage("Total kills on this server: ${data.getInt("totalKills")}")
+        return true
     }
 }
 ```
