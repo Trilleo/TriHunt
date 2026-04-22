@@ -1,10 +1,10 @@
 package net.trilleo.mc.plugins.trihunt
 
 import net.trilleo.mc.plugins.trihunt.config.PluginConfig
-import net.trilleo.mc.plugins.trihunt.registration.CommandRegistrar
-import net.trilleo.mc.plugins.trihunt.registration.GUIManager
-import net.trilleo.mc.plugins.trihunt.registration.ListenerRegistrar
-import net.trilleo.mc.plugins.trihunt.registration.PermissionRegistrar
+import net.trilleo.mc.plugins.trihunt.data.PlayerDataManager
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
+import net.trilleo.mc.plugins.trihunt.registration.*
+import net.trilleo.mc.plugins.trihunt.utils.MessageUtil
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
@@ -17,8 +17,14 @@ class Main : JavaPlugin() {
         // Load configuration
         logger.info("Loading configuration...")
         pluginConfig = PluginConfig(this)
+        MessageUtil.init(pluginConfig.messagePrefix)
 
-        // Register commands, listeners and GUIs
+        // Initialise data managers
+        logger.info("Initialising data managers...")
+        ServerDataManager.init(this)
+        PlayerDataManager.init(this)
+
+        // Register commands, listeners, GUIs and tasks
         logger.info("Registering commands...")
         CommandRegistrar.registerAll(this)
         logger.info("Registering permissions...")
@@ -27,11 +33,20 @@ class Main : JavaPlugin() {
         ListenerRegistrar.registerAll(this)
         logger.info("Registering GUIs...")
         GUIManager.registerAll(this)
+        logger.info("Registering tasks...")
+        TaskRegistrar.registerAll(this)
 
         logger.info("Plugin enabled!")
     }
 
     override fun onDisable() {
+        // Cancel all scheduled tasks
+        TaskRegistrar.unregisterAll()
+
+        // Persist data for any players still online and server-wide data
+        PlayerDataManager.saveAll()
+        ServerDataManager.save()
+
         logger.info("Plugin disabled!")
     }
 }
