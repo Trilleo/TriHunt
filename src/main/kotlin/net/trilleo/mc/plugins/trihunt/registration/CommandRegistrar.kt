@@ -187,11 +187,11 @@ object CommandRegistrar {
         subCommand.permission?.let { perm ->
             if (!sender.hasPermission(perm)) {
                 if (sender is Player) {
-                    sender.sendPrefixed("You do not have permission to use this command.")
+                    sender.sendPrefixed("<red>You don't have permission to use this command!")
                 } else {
-                    sender.sendMessage("You do not have permission to use this command.")
-                    return true
+                    sender.sendMessage("You don't have permission to use this command.")
                 }
+                return true
             }
         }
 
