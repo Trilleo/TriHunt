@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
+import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material

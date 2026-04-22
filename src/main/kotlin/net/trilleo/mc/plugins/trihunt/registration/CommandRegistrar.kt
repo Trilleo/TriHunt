@@ -1,10 +1,12 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -151,16 +153,29 @@ object CommandRegistrar {
 
     private fun executeParentCommand(sender: CommandSender, args: Array<out String>): Boolean {
         if (args.isEmpty()) {
-            sender.sendMessage("Usage: /$ROOT_COMMAND <subcommand>")
-            sender.sendMessage(
-                "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
-            )
+            if (sender is Player) {
+                sender.sendPrefixed("Usage: /$ROOT_COMMAND <subcommand>")
+                sender.sendPrefixed(
+                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
+                )
+            } else {
+                sender.sendMessage("Usage: /$ROOT_COMMAND <subcommand>")
+                sender.sendMessage(
+                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
+                )
+            }
             return true
         }
 
         val subName = args[0].lowercase()
         val subCommand = subCommands[subName]
         if (subCommand == null) {
+            if (sender is Player) {
+                sender.sendPrefixed("Unknown sub-command: ${args[0]}")
+                sender.sendPrefixed(
+                    "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"
+                )
+            }
             sender.sendMessage("Unknown sub-command: ${args[0]}")
             sender.sendMessage(
                 "Available sub-commands: ${subCommands.keys.sorted().joinToString(", ")}"

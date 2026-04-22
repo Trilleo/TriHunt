@@ -2,7 +2,10 @@ package net.trilleo.mc.plugins.trihunt.commands.moderation
 
 import net.trilleo.mc.plugins.trihunt.Main
 import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
+import net.trilleo.mc.plugins.trihunt.utils.MessageUtil
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -19,11 +22,20 @@ class ReloadCommand(private val plugin: JavaPlugin) : PluginCommand(
     override fun execute(sender: CommandSender, args: Array<out String>): Boolean {
         val main = plugin as? Main
         if (main == null) {
-            sender.sendMessage("Error: Plugin instance type mismatch. Unable to reload configuration.")
+            if (sender is Player) {
+                sender.sendPrefixed("<red>Error: Plugin instance type mismatch. Unable to reload configuration.")
+            } else {
+                sender.sendMessage("Error: Plugin instance type mismatch. Unable to reload configuration.")
+            }
             return true
         }
         main.pluginConfig.reload()
-        sender.sendMessage("Configuration reloaded!")
+        MessageUtil.init(main.pluginConfig.messagePrefix)
+        if (sender is Player) {
+            sender.sendPrefixed("Configuration reloaded!")
+        } else {
+            sender.sendMessage("Configuration reloaded!")
+        }
         return true
     }
 }
