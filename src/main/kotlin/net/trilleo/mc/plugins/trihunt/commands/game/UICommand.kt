@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -18,7 +19,7 @@ class UICommand : PluginCommand(
             return true
         }
         GUIManager.open(sender, "main")
-        sender.sendMessage(Component.text("Opened Trihunt main UI.").color(NamedTextColor.GREEN))
+        sender.sendPrefixed("<green>Opened TriHunt main UI.")
         return true
     }
 }
