@@ -1,10 +1,15 @@
 package net.trilleo.mc.plugins.trihunt.guis
 
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.trilleo.mc.plugins.trihunt.enums.DisplayLocation
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
+import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
+import net.trilleo.mc.plugins.trihunt.utils.CountdownUtil
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -14,26 +19,47 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.meta.SkullMeta
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
-class MainUI : PluginGUI(
+class MainUI(private val plugin: JavaPlugin) : PluginGUI(
     id = "main",
     title = Component.text("TriHunt Main UI").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD),
     rows = 5,
     fillMode = FillMode.LIGHT
 ) {
+    val slotIndex: Map<String, Int> = mapOf(
+        "startButtonSlot" to 22,
+        "creditsButtonSlot" to 24,
+        "settingsButtonSlot" to 20,
+        "closeButtonSlot" to 40
+    )
+
     val authorUUID = "28468a45-b78c-4968-9782-f4f893216066"
 
     override fun setup(player: Player, inventory: Inventory) {
+        val closeButton = itemStack(Material.BARRIER) {
+            name("<bold><red>Close")
+        }
         val startButton = itemStack(Material.GREEN_CONCRETE) {
             name("<bold><gradient:green:dark_green>Start</gradient></bold>")
-            lore(" ", "<gray>Start the Manhunt")
+            lore(
+                " ",
+                "<dark_gray>=====================",
+                "<gray>Start the Manhunt",
+                "<dark_gray>====================="
+            )
             enchant(Enchantment.KNOCKBACK, 1)
             flag(ItemFlag.HIDE_ENCHANTS)
         }
         val creditsButton = itemStack(Material.PLAYER_HEAD) {
             name("<bold><gold>Credits")
-            lore(" ", "<gray>View plugin contributors")
+            lore(
+                " ",
+                "<dark_gray>=====================",
+                "<gray>View plugin contributors",
+                "<dark_gray>====================="
+            )
             meta {
                 (this as SkullMeta)
                     .owningPlayer = Bukkit.getPlayer(UUID.fromString(authorUUID))
@@ -41,15 +67,48 @@ class MainUI : PluginGUI(
         }
         val settingsButton = itemStack(Material.COMMAND_BLOCK) {
             name("<bold><dark_gray>Settings")
-            lore(" ", "<gray>Configure game settings")
+            lore(
+                " ",
+                "<dark_gray>=====================",
+                "<gray>Configure game settings",
+                "<dark_gray>====================="
+            )
         }
 
-        inventory.setItem(22, startButton)
-        inventory.setItem(24, creditsButton)
-        inventory.setItem(20, settingsButton)
+        inventory.setItem(slotIndex.getValue("startButtonSlot"), startButton)
+        inventory.setItem(slotIndex.getValue("creditsButtonSlot"), creditsButton)
+        inventory.setItem(slotIndex.getValue("settingsButtonSlot"), settingsButton)
+        inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
     }
 
     override fun onClick(event: InventoryClickEvent) {
         event.isCancelled = true
+        val player = event.whoClicked as Player
+        if (event.slot in slotIndex.values) {
+            player.playSound(
+                Sound.sound(Key.key("minecraft:ui.button.click"), Sound.Source.UI, 1f, 1f)
+            )
+        }
+
+        if (event.slot == slotIndex.getValue("closeButtonSlot")) {
+            player.closeInventory()
+        }
+        if (event.slot == slotIndex.getValue("settingsButtonSlot")) {
+            GUIManager.open(player, "settings")
+        }
+        if (event.slot == slotIndex.getValue("startButtonSlot")) {
+            player.closeInventory()
+            CountdownUtil().start(
+                plugin = plugin,
+                player = player,
+                seconds = 10,
+                displayLocation = DisplayLocation.ACTION_BAR,
+                message = "<yellow>Starting in <bold>{seconds}</bold>",
+                finishMessage = "<green>Go!",
+                sound = Sound.sound(Key.key("minecraft:ui.button.click"), Sound.Source.UI, 1f, 1f),
+                finishSound = Sound.sound(Key.key("minecraft:entity.player.levelup"), Sound.Source.UI, 1f, 1f),
+                onFinish = { p -> p.sendMessage("Started!") }
+            )
+        }
     }
 }
