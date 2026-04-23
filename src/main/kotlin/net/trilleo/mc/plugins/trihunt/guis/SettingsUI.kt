@@ -28,7 +28,7 @@ class SettingsUI : PluginGUI(
         val closeButton = itemStack(Material.BARRIER) {
             name("<bold><red>Close")
         }
-        val backButton = itemStack(org.bukkit.Material.ARROW) {
+        val backButton = itemStack(Material.ARROW) {
             name("<bold><gray>Back")
         }
 
