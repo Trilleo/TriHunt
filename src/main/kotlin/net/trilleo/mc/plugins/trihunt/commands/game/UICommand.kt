@@ -1,7 +1,5 @@
 package net.trilleo.mc.plugins.trihunt.commands.game
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
