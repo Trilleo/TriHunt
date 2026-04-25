@@ -19,7 +19,7 @@ class Main : JavaPlugin() {
         pluginConfig = PluginConfig(this)
         MessageUtil.init(pluginConfig.messagePrefix)
 
-        // Initialise data managers
+        // Initialize data managers
         logger.info("Initialising data managers...")
         ServerDataManager.init(this)
         PlayerDataManager.init(this)
