@@ -170,7 +170,7 @@ class ItemStackBuilder(@PublishedApi internal val material: Material) {
      * @param type  the [PersistentDataType] describing how the value is stored
      * @param value the value to store
      */
-    fun <P, C : Any> pdc(key: NamespacedKey, type: PersistentDataType<P, C>, value: C) {
+    fun <P : Any, C : Any> pdc(key: NamespacedKey, type: PersistentDataType<P, C>, value: C) {
         pdcOperations.add { container -> container.set(key, type, value) }
     }
 
