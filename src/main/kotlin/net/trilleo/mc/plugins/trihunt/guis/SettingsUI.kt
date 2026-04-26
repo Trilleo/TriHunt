@@ -16,12 +16,12 @@ import org.bukkit.event.inventory.InventoryClickEvent
 class SettingsUI : PluginGUI(
     id = "settings",
     title = Component.text("TriHunt Settings").color(NamedTextColor.DARK_GRAY).decorate(TextDecoration.BOLD),
-    rows = 5,
+    rows = 6,
     fillMode = FillMode.LIGHT
 ) {
     val slotIndex: Map<String, Int> = mapOf(
-        "backButtonSlot" to 36,
-        "closeButtonSlot" to 40
+        "backButtonSlot" to 45,
+        "closeButtonSlot" to 49
     )
 
     override fun setup(player: org.bukkit.entity.Player, inventory: org.bukkit.inventory.Inventory) {
