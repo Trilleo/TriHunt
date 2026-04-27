@@ -10,6 +10,7 @@ import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -26,7 +27,8 @@ class SettingsUI : PluginGUI(
         "closeButtonSlot" to 49
     )
     val settingsIndex: Map<String, Int> = mapOf(
-        "autoRefreshCompass" to 10
+        "autoRefreshCompass" to 10,
+        "speedrunnerBonusTime" to 12
     )
 
     fun refreshSettings(inventory: Inventory) {
@@ -39,11 +41,29 @@ class SettingsUI : PluginGUI(
                 "   ",
                 "<gray>Automatically refresh compass every 5 seconds",
                 "   ",
-                "<dark_gray>Value: <yellow>$isAutoRefreshCompass"
+                "<white>Value: <yellow>$isAutoRefreshCompass",
+                "   ",
+                "<gray>[Click] <dark_gray>to toggle"
+            )
+        }
+
+        val speedrunnerBonusTime = serverData.getInt("speedrunnerBonusTime", 10)
+        val speedrunnerBonusTimeButton = itemStack(Material.CLOCK) {
+            name("<bold><white>Speedrunner Bonus Time")
+            lore(
+                "   ",
+                "<gray>Time for speedrunner to escape",
+                "<gray>before hunters are released (seconds)",
+                "   ",
+                "<white>Value: <yellow>$speedrunnerBonusTime",
+                "   ",
+                "<gray>[Left Click] <dark_gray>to decrease by 1",
+                "<gray>[Right Click] <dark_gray>to increase by 1"
             )
         }
 
         inventory.setItem(settingsIndex.getValue("autoRefreshCompass"), autoRefreshCompassButton)
+        inventory.setItem(settingsIndex.getValue("speedrunnerBonusTime"), speedrunnerBonusTimeButton)
     }
 
     override fun setup(player: Player, inventory: Inventory) {
@@ -90,6 +110,28 @@ class SettingsUI : PluginGUI(
                 serverData.set("autoRefreshCompass", false)
             } else {
                 serverData.set("autoRefreshCompass", true)
+            }
+
+            refreshSettings(event.inventory)
+        }
+        if (event.slot == settingsIndex.getValue("speedrunnerBonusTime")) {
+            val speedrunnerBonusTime = serverData.getInt("speedrunnerBonusTime", 10)
+
+            if (event.isLeftClick) {
+                if (speedrunnerBonusTime == 0) {
+                    player.sendPrefixed("<dark_red>Time cannot be less than 0!")
+                    return
+                }
+
+                serverData.set("speedrunnerBonusTime", speedrunnerBonusTime - 1)
+            }
+            if (event.isRightClick) {
+                if (speedrunnerBonusTime == 120) {
+                    player.sendPrefixed("<dark_red>Time cannot be more than 120!")
+                    return
+                }
+
+                serverData.set("speedrunnerBonusTime", speedrunnerBonusTime + 1)
             }
 
             refreshSettings(event.inventory)
