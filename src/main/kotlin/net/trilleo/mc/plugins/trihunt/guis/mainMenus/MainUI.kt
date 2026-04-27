@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
+import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -79,7 +80,9 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
                 " ",
                 "<dark_gray>=====================",
                 "<gray>Select your team",
-                "<dark_gray>====================="
+                "<dark_gray>=====================",
+                "   ",
+                "<white>Current team: ${TeamUtil.getPlayerTeam(player)?.displayName ?: "<dark_gray>None"}"
             )
         }
 
