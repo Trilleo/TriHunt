@@ -26,7 +26,7 @@ class CreditsUI : PluginGUI(
     fillMode = FillMode.LIGHT
 ) {
     val slotIndex: Map<String, Int> = mapOf(
-        "backButtonSlot" to 36,
+        "backButtonSlot" to 39,
         "closeButtonSlot" to 40,
         "authorButtonSlot" to 4,
         "youtubeButtonSlot" to 21,

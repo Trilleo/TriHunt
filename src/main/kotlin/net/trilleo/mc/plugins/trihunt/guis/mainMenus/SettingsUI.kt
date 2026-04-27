@@ -23,7 +23,7 @@ class SettingsUI : PluginGUI(
     fillMode = FillMode.LIGHT
 ) {
     val slotIndex: Map<String, Int> = mapOf(
-        "backButtonSlot" to 45,
+        "backButtonSlot" to 48,
         "closeButtonSlot" to 49
     )
     val settingsIndex: Map<String, Int> = mapOf(
