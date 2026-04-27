@@ -1,4 +1,4 @@
-package net.trilleo.mc.plugins.trihunt.guis
+package net.trilleo.mc.plugins.trihunt.guis.mainMenus
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
