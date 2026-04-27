@@ -100,18 +100,7 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
             GUIManager.open(player, "credits")
         }
         if (event.slot == slotIndex.getValue("startButtonSlot")) {
-            player.closeInventory()
-            CountdownUtil().start(
-                plugin = plugin,
-                player = player,
-                seconds = 10,
-                displayLocation = DisplayLocation.ACTION_BAR,
-                message = "<yellow>Starting in <bold>{seconds}</bold>",
-                finishMessage = "<green>Go!",
-                sound = Sound.sound(Key.key("minecraft:ui.button.click"), Sound.Source.UI, 1f, 1f),
-                finishSound = Sound.sound(Key.key("minecraft:entity.player.levelup"), Sound.Source.UI, 1f, 1f),
-                onFinish = { p -> p.sendMessage("Started!") }
-            )
+            TODO("Select Team / Start Game")
         }
     }
 }
