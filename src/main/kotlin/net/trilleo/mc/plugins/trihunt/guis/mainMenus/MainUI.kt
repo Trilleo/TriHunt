@@ -23,14 +23,15 @@ import java.util.*
 class MainUI(private val plugin: JavaPlugin) : PluginGUI(
     id = "main",
     title = Component.text("TriHunt Main UI").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD),
-    rows = 5,
+    rows = 6,
     fillMode = FillMode.LIGHT
 ) {
     val slotIndex: Map<String, Int> = mapOf(
-        "startButtonSlot" to 22,
-        "creditsButtonSlot" to 24,
-        "settingsButtonSlot" to 20,
-        "closeButtonSlot" to 40
+        "startButtonSlot" to 13,
+        "creditsButtonSlot" to 15,
+        "settingsButtonSlot" to 11,
+        "teamSelectButtonSlot" to 31,
+        "closeButtonSlot" to 49
     )
 
     val authorUUID = "28468a45-b78c-4968-9782-f4f893216066"
@@ -72,10 +73,20 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
                 "<dark_gray>====================="
             )
         }
+        val teamSelectButton = itemStack(Material.BOOK) {
+            name("<bold><dark_blue>Team")
+            lore(
+                " ",
+                "<dark_gray>=====================",
+                "<gray>Select your team",
+                "<dark_gray>====================="
+            )
+        }
 
         inventory.setItem(slotIndex.getValue("startButtonSlot"), startButton)
         inventory.setItem(slotIndex.getValue("creditsButtonSlot"), creditsButton)
         inventory.setItem(slotIndex.getValue("settingsButtonSlot"), settingsButton)
+        inventory.setItem(slotIndex.getValue("teamSelectButtonSlot"), teamSelectButton)
         inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
     }
 
@@ -97,8 +108,11 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
         if (event.slot == slotIndex.getValue("creditsButtonSlot")) {
             GUIManager.open(player, "credits")
         }
+        if (event.slot == slotIndex.getValue("teamSelectButtonSlot")) {
+            GUIManager.open(player, "team-select")
+        }
         if (event.slot == slotIndex.getValue("startButtonSlot")) {
-            TODO("Select Team / Start Game")
+            TODO("Start Game")
         }
     }
 }
