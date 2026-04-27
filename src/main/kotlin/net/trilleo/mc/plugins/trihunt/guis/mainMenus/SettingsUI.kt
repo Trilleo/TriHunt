@@ -58,6 +58,7 @@ class SettingsUI : PluginGUI(
                 "<white>Value: <yellow>$speedrunnerBonusTime",
                 "   ",
                 "<gray>[Left Click] <dark_gray>to decrease by 1",
+                "   ",
                 "<gray>[Right Click] <dark_gray>to increase by 1"
             )
         }
