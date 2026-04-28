@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
+import net.trilleo.mc.plugins.trihunt.managers.GameManager
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
@@ -115,7 +116,11 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
             GUIManager.open(player, "team-select")
         }
         if (event.slot == slotIndex.getValue("startButtonSlot")) {
-            TODO("Start Game")
+            player.closeInventory()
+
+            if (GameManager.checkCondition(player)) {
+                GameManager.prepareGame()
+            }
         }
     }
 }
