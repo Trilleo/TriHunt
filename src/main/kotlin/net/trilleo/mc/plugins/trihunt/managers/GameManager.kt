@@ -2,6 +2,10 @@ package net.trilleo.mc.plugins.trihunt.managers
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.title.Title
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
@@ -74,6 +78,36 @@ class GameManager(private val plugin: JavaPlugin) {
             } else {
                 player.sendPrefixed("<green>Game is ready! Wait for starting...")
             }
+        }
+    }
+
+    fun startGame() {
+        val serverData = ServerDataManager.get()
+
+        serverData.set("gameStatus", "active")
+        for (player in plugin.server.onlinePlayers) {
+            var title: Title = Title.title(Component.text(""), Component.text(""))
+            if (TeamUtil.isInTeam(player, "speedrunner")) {
+                title = Title.title(
+                    Component.text("Start").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
+                    Component.text("Escape the hunters!").color(NamedTextColor.DARK_GREEN)
+                )
+            }
+            if (TeamUtil.isInTeam(player, "hunter")) {
+                title = Title.title(
+                    Component.text("Start").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
+                    Component.text("Hunt down the speedrunners!").color(NamedTextColor.DARK_RED)
+                )
+            }
+            if (TeamUtil.isInTeam(player, "spectator")) {
+                title = Title.title(
+                    Component.text("Start").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
+                    Component.text("Enjoy the game!").color(NamedTextColor.DARK_GRAY)
+                )
+            }
+
+            player.showTitle(title)
+            player.playSound(Sound.sound(Key.key("minecraft:entity.ender_dragon.growl"), Sound.Source.MASTER, 1f, 1f))
         }
     }
 
