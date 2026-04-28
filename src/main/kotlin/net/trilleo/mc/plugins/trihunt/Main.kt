@@ -42,7 +42,7 @@ class Main : JavaPlugin() {
         TeamManager.initializeTeam()
 
         // Initialize game
-        GameManager.initiateGame()
+        GameManager(this).initiateGame()
 
         logger.info("Plugin enabled!")
     }

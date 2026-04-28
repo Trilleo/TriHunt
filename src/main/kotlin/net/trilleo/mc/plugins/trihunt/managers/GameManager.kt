@@ -4,8 +4,9 @@ import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
-object GameManager {
+class GameManager(private val plugin: JavaPlugin) {
     fun checkCondition(player: Player): Boolean {
         if (TeamUtil.getTeam("speedrunner")?.memberCount == 0) {
             player.sendPrefixed("<dark_red>There must be at least 1 player in ${TeamUtil.getTeam("speedrunner")?.displayName}")

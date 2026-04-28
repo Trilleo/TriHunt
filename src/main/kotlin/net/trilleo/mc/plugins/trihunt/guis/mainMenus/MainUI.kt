@@ -118,8 +118,8 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
         if (event.slot == slotIndex.getValue("startButtonSlot")) {
             player.closeInventory()
 
-            if (GameManager.checkCondition(player)) {
-                GameManager.prepareGame()
+            if (GameManager(plugin).checkCondition(player)) {
+                GameManager(plugin).prepareGame()
             }
         }
     }
