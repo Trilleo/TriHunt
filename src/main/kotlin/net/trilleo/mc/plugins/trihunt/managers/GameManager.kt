@@ -66,10 +66,17 @@ class GameManager(private val plugin: JavaPlugin) {
     }
 
     fun updatePlayerGameMode(player: Player) {
-        if (TeamUtil.getPlayerTeam(player)?.name == "spectator") {
-            player.gameMode = GameMode.SPECTATOR
-        } else {
-            player.gameMode = GameMode.SURVIVAL
+        val serverData = ServerDataManager.get()
+
+        if (serverData.getString("gameStatus") in listOf("ready", "active")) {
+            if (TeamUtil.getPlayerTeam(player)?.name == "spectator") {
+                player.gameMode = GameMode.SPECTATOR
+            } else {
+                player.gameMode = GameMode.SURVIVAL
+            }
+        }
+        if (serverData.getString("gameStatus") == "inactive") {
+            player.gameMode = GameMode.ADVENTURE
         }
     }
 }
