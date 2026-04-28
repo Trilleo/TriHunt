@@ -1,6 +1,5 @@
 package net.trilleo.mc.plugins.trihunt.commands.game
 
-import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.managers.GameManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginCommand
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed

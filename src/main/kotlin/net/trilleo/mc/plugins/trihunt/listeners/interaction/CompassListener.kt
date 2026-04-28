@@ -1,11 +1,8 @@
 package net.trilleo.mc.plugins.trihunt.listeners.interaction
 
-import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.managers.CompassManager
-import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
-import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action

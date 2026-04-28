@@ -1,22 +1,15 @@
 package net.trilleo.mc.plugins.trihunt.listeners.interaction
 
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
-import net.trilleo.mc.plugins.trihunt.managers.ItemManager
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
-import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.inventory.ItemFlag
-import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
