@@ -61,7 +61,14 @@ class GameManager(private val plugin: JavaPlugin) {
         }
 
         for (player in plugin.server.onlinePlayers) {
-            player.playSound(Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.MASTER, 1f, 1f))
+            player.playSound(
+                Sound.sound(
+                    Key.key("minecraft:entity.experience_orb.pickup"),
+                    Sound.Source.MASTER,
+                    1f,
+                    1f
+                )
+            )
             if (TeamUtil.isInTeam(player, "speedrunner")) {
                 player.sendPrefixed("<green>Game is ready! <yellow>Punch a hunter <green>to start")
             } else {
