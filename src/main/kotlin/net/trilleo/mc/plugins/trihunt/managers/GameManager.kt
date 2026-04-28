@@ -189,6 +189,7 @@ class GameManager(private val plugin: JavaPlugin) {
                         1f
                     )
                 )
+                TeamUtil.addPlayer(player, "spectator")
             }
         }
     }
