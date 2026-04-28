@@ -6,10 +6,13 @@ import net.trilleo.mc.plugins.trihunt.managers.ItemManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.persistence.PersistentDataType
@@ -66,5 +69,13 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
         val player = event.player
 
         GameManager(plugin).updatePluginItem(player)
+    }
+
+    // Detect dragon death
+    @EventHandler
+    fun onDragonDeath(event: EntityDeathEvent) {
+        if (event.entity.type == EntityType.ENDER_DRAGON) {
+            GameManager(plugin).endGame(true)
+        }
     }
 }
