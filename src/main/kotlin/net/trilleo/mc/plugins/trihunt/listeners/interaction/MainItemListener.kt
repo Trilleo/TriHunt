@@ -21,30 +21,6 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
 class MainItemListener(private val plugin: JavaPlugin) : Listener {
-    // Give player main item on join
-    @EventHandler
-    fun onPlayerJoin(event: PlayerJoinEvent) {
-        val player = event.player
-        for (item in player.inventory.contents) {
-            if (item != null && PDCUtil.get(
-                    item,
-                    PDCEntryUtil.PDCKey(plugin).itemIdentifierKey,
-                    PersistentDataType.STRING
-                ) == PDCEntryUtil.PDCValue().mainItemIdentifier
-            ) {
-                return
-            }
-        }
-
-        val mainItem = ItemManager(plugin).createMainItem()
-
-        if (player.inventory.getItem(8) == null) {
-            player.inventory.setItem(8, mainItem)
-        } else {
-            player.inventory.addItem(mainItem)
-        }
-    }
-
     // Detect menu opening
     @EventHandler
     fun onPlayerInteract(event: PlayerInteractEvent) {

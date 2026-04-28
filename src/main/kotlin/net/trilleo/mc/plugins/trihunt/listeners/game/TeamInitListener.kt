@@ -1,11 +1,13 @@
 package net.trilleo.mc.plugins.trihunt.listeners.game
 
+import net.trilleo.mc.plugins.trihunt.managers.GameManager
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.plugin.java.JavaPlugin
 
-class TeamInitListener : Listener {
+class TeamInitListener(private val plugin: JavaPlugin) : Listener {
     // Add player to Spectator Team on default
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
@@ -13,5 +15,7 @@ class TeamInitListener : Listener {
         if (TeamUtil.getPlayerTeam(player) == null) {
             TeamUtil.addPlayer(player, "spectator")
         }
+
+        GameManager(plugin).updatePluginItem(player)
     }
 }
