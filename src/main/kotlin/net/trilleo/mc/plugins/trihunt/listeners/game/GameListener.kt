@@ -5,6 +5,8 @@ import net.trilleo.mc.plugins.trihunt.managers.GameManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
+import org.bukkit.GameMode
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -12,6 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
@@ -74,6 +77,20 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
     fun onDragonDeath(event: EntityDeathEvent) {
         if (event.entity.type == EntityType.ENDER_DRAGON) {
             GameManager(plugin).endGame(true)
+        }
+    }
+
+    // Detect midway join
+    @EventHandler
+    fun onPlayerJoin(event: PlayerJoinEvent) {
+        val player = event.player
+        val serverData = ServerDataManager.get()
+
+        if (serverData.getString("gameStatus") in listOf("ready", "active")) {
+            if (TeamUtil.isInTeam(player, "spectator") || TeamUtil.getPlayerTeam(player) == null) {
+                player.gameMode = GameMode.SPECTATOR
+                player.sendPrefixed("<gray>The game is currently in progress so you were put in spectator mode")
+            }
         }
     }
 }
