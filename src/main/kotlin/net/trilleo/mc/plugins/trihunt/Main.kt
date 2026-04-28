@@ -3,6 +3,7 @@ package net.trilleo.mc.plugins.trihunt
 import net.trilleo.mc.plugins.trihunt.config.PluginConfig
 import net.trilleo.mc.plugins.trihunt.data.PlayerDataManager
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
+import net.trilleo.mc.plugins.trihunt.managers.GameManager
 import net.trilleo.mc.plugins.trihunt.managers.TeamManager
 import net.trilleo.mc.plugins.trihunt.registration.*
 import net.trilleo.mc.plugins.trihunt.utils.MessageUtil
@@ -39,6 +40,9 @@ class Main : JavaPlugin() {
 
         // Initialize teams
         TeamManager.initializeTeam()
+
+        // Initialize game
+        GameManager.initiateGame()
 
         logger.info("Plugin enabled!")
     }
