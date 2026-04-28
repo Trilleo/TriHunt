@@ -27,4 +27,18 @@ class ItemManager(private val plugin: JavaPlugin) {
         }
         return mainItem
     }
+
+    fun createCompassItem(): ItemStack {
+        val compassItem = itemStack(Material.COMPASS) {
+            name("<green>Tracking Compass")
+            enchant(Enchantment.DENSITY, 1)
+            flag(ItemFlag.HIDE_ENCHANTS)
+            pdc(
+                PDCEntryUtil.PDCKey(plugin).itemIdentifierKey,
+                PersistentDataType.STRING,
+                PDCEntryUtil.PDCValue().compassItemIdentifier
+            )
+        }
+        return compassItem
+    }
 }
