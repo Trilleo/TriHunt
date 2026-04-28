@@ -1,9 +1,11 @@
 package net.trilleo.mc.plugins.trihunt.listeners.interaction
 
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
@@ -73,7 +75,13 @@ class MainItemListener(private val plugin: JavaPlugin) : Listener {
                 ) == PDCEntryUtil.PDCValue().mainItemIdentifier
             ) {
                 event.isCancelled = true
-                GUIManager.open(player, "main")
+                val serverData = ServerDataManager.get()
+
+                if (serverData.getString("gameStatus", "inactive") == "inactive") {
+                    GUIManager.open(player, "main")
+                } else {
+                    player.sendPrefixed("<dark_red>You can't open this now!")
+                }
             }
         }
     }
