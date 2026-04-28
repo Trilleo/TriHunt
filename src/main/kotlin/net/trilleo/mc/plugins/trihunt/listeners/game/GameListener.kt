@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -77,6 +78,17 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
     fun onDragonDeath(event: EntityDeathEvent) {
         if (event.entity.type == EntityType.ENDER_DRAGON) {
             GameManager(plugin).endGame(true)
+        }
+    }
+
+    // Detect crouch cancel
+    @EventHandler
+    fun onSneak(event: PlayerToggleSneakEvent) {
+        val serverData = ServerDataManager.get()
+        val player = event.player
+
+        if (serverData.getString("gameStatus") == "ready" && TeamUtil.isInTeam(player, "speedrunner")) {
+            GameManager(plugin).cancelGame()
         }
     }
 

@@ -74,10 +74,21 @@ class GameManager(private val plugin: JavaPlugin) {
                 )
             )
             if (TeamUtil.isInTeam(player, "speedrunner")) {
-                player.sendPrefixed("<green>Game is ready! <yellow>Punch a hunter <green>to start")
+                player.sendPrefixed("<green>Game is ready! <yellow>Punch a hunter <green>to start / <yellow>Crouch <green>to cancel")
             } else {
                 player.sendPrefixed("<green>Game is ready! Wait for starting...")
             }
+        }
+    }
+
+    fun cancelGame() {
+        val serverData = ServerDataManager.get()
+
+        serverData.set("gameStatus", "inactive")
+        for (player in plugin.server.onlinePlayers) {
+            updatePluginItem(player)
+            updatePlayerGameMode(player)
+            player.sendPrefixed("<red>Game cancelled")
         }
     }
 
