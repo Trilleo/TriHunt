@@ -1,6 +1,7 @@
 package net.trilleo.mc.plugins.trihunt.listeners.interaction
 
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
+import net.trilleo.mc.plugins.trihunt.managers.ItemManager
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
@@ -20,24 +21,6 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
 class MainItemListener(private val plugin: JavaPlugin) : Listener {
-    private fun createMainItem(): ItemStack {
-        val mainItem = itemStack(Material.NETHER_STAR) {
-            name("<bold><gold>TriHunt Menu")
-            lore(
-                "   ",
-                "<gray>[Right Click] to open menu"
-            )
-            enchant(Enchantment.BINDING_CURSE, 1)
-            flag(ItemFlag.HIDE_ENCHANTS)
-            pdc(
-                PDCEntryUtil.PDCKey(plugin).itemIdentifierKey,
-                PersistentDataType.STRING,
-                PDCEntryUtil.PDCValue().mainItemIdentifier
-            )
-        }
-        return mainItem
-    }
-
     // Give player main item on join
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
@@ -53,7 +36,7 @@ class MainItemListener(private val plugin: JavaPlugin) : Listener {
             }
         }
 
-        val mainItem = createMainItem()
+        val mainItem = ItemManager(plugin).createMainItem()
 
         if (player.inventory.getItem(0) == null) {
             player.inventory.setItem(0, mainItem)
