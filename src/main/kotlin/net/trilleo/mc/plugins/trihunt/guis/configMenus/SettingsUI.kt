@@ -24,7 +24,8 @@ class SettingsUI : PluginGUI(
 ) {
     val slotIndex: Map<String, Int> = mapOf(
         "backButtonSlot" to 48,
-        "closeButtonSlot" to 49
+        "closeButtonSlot" to 49,
+        "gameRuleButtonSlot" to 53,
     )
     val settingsIndex: Map<String, Int> = mapOf(
         "autoRefreshCompass" to 10,
@@ -74,9 +75,17 @@ class SettingsUI : PluginGUI(
         val backButton = itemStack(Material.ARROW) {
             name("<bold><gray>Back")
         }
+        val gameRuleButton = itemStack(Material.GRASS_BLOCK) {
+            name("<bold><yellow>GameRule Modifier")
+            lore(
+                "   ",
+                "<gray>Change Minecraft game rules"
+            )
+        }
 
         inventory.setItem(slotIndex.getValue("backButtonSlot"), backButton)
         inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
+        inventory.setItem(slotIndex.getValue("gameRuleButtonSlot"), gameRuleButton)
 
         refreshSettings(inventory)
     }
@@ -102,6 +111,9 @@ class SettingsUI : PluginGUI(
         }
         if (event.slot == slotIndex.getValue("backButtonSlot")) {
             GUIManager.open(player, "main")
+        }
+        if (event.slot == slotIndex.getValue("gameRuleButtonSlot")) {
+            GUIManager.open(player, "gamerule")
         }
 
         if (event.slot == settingsIndex.getValue("autoRefreshCompass")) {
