@@ -605,14 +605,14 @@ constructor is needed.
 
 ### PluginItem Properties and Methods
 
-| Member        | Signature                  | Description                                                                    |
-|:--------------|:---------------------------|:-------------------------------------------------------------------------------|
-| `id`          | `String` *(constructor)*   | Unique lower-case identifier stored in every produced stack's PDC              |
-| `ITEM_ID_KEY` | `NamespacedKey` *(static)* | The PDC key used to stamp the ID; namespace `trihunt`, key `custom_item_id`    |
-| `create`      | `create(amount: Int = 1)`  | Returns a fully configured, ID-stamped `ItemStack`                             |
-| `buildItem`   | `buildItem(amount: Int)`   | **Override** — define material, name, lore, etc. using the `itemStack` DSL     |
-| `matches`     | `matches(ItemStack)`       | Returns `true` when the stack carries this item's ID in its PDC                |
-| `asChoice`    | `asChoice()`               | Returns a `RecipeChoice.ExactChoice` for use as a recipe ingredient            |
+| Member        | Signature                  | Description                                                                 |
+|:--------------|:---------------------------|:----------------------------------------------------------------------------|
+| `id`          | `String` *(constructor)*   | Unique lower-case identifier stored in every produced stack's PDC           |
+| `ITEM_ID_KEY` | `NamespacedKey` *(static)* | The PDC key used to stamp the ID; namespace `trihunt`, key `custom_item_id` |
+| `create`      | `create(amount: Int = 1)`  | Returns a fully configured, ID-stamped `ItemStack`                          |
+| `buildItem`   | `buildItem(amount: Int)`   | **Override** — define material, name, lore, etc. using the `itemStack` DSL  |
+| `matches`     | `matches(ItemStack)`       | Returns `true` when the stack carries this item's ID in its PDC             |
+| `asChoice`    | `asChoice()`               | Returns a `RecipeChoice.ExactChoice` for use as a recipe ingredient         |
 
 ### Example (Kotlin Object)
 
