@@ -39,7 +39,7 @@ class SettingsUI : PluginGUI(
             name("<bold><white>Compass Refresh")
             lore(
                 "   ",
-                "<gray>Automatically refresh compass every 5 seconds",
+                "<gray>Automatically refresh compass every 30 seconds",
                 "   ",
                 "<white>Value: <yellow>$isAutoRefreshCompass",
                 "   ",
