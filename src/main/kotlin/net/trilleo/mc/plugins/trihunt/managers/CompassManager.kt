@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 class CompassManager(private val plugin: JavaPlugin) {
-    fun refreshCompass(player: Player, compassItem: ItemStack) {
+    fun refreshCompass(player: Player) {
         var speedrunnerUUIDs = TeamUtil.getTeam("speedrunner")?.members
         if (speedrunnerUUIDs != null) {
             for (uuid in speedrunnerUUIDs) {

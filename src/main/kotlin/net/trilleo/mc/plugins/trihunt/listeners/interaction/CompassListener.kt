@@ -25,7 +25,7 @@ class CompassListener(private val plugin: JavaPlugin) : Listener {
                 ) == PDCEntryUtil.PDCValue().compassItemIdentifier
             ) {
                 event.isCancelled = true
-                CompassManager(plugin).refreshCompass(player, item)
+                CompassManager(plugin).refreshCompass(player)
             }
         }
     }
