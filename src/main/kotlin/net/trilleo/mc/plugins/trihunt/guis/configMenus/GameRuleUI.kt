@@ -15,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.plugin.java.JavaPlugin
 
 class GameRuleUI(private val plugin: JavaPlugin) : PluginGUI(
@@ -118,6 +119,7 @@ class GameRuleUI(private val plugin: JavaPlugin) : PluginGUI(
                 "   ",
                 "<gray>[Click] <dark_gray>to toggle"
             )
+            flag(ItemFlag.HIDE_ATTRIBUTES)
         }
         val fireDamageButton = itemStack(Material.LAVA_BUCKET) {
             name("<bold><white>Fire Damage")
