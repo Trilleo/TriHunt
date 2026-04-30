@@ -2,7 +2,8 @@
   TriHunt: Modern Manhunt Plugin
 </h1>
 
-**TriHunt** is a Manhunt plugin for Minecraft, developed by **Trilleo**. One team runs. The other hunts. The game ends when the Speedrunnersunners beat the Ender Dragon — or when the Hunters stop them first.
+**TriHunt** is a Manhunt plugin for Minecraft 26.1.2 **Paper** server, developed by **Trilleo**. One team runs. The
+other hunts. The game ends when the Speedrunnersunners beat the chosen boss — or when the Hunters stop them first.
 
 ---
 
@@ -10,7 +11,7 @@
 
 The classic Manhunt experience, brought to life on your server:
 
-- 🏃 **Speedrunners** race to defeat the Ender Dragon as fast as possible.
+- 🏃 **Speedrunners** race to defeat the boss as fast as possible.
 - 🗡️ **Hunters** relentlessly track them down to prevent it.
 - 👀 **Spectators** watch the game at ease.
 - Every second counts. Every decision matters.
@@ -23,6 +24,7 @@ The classic Manhunt experience, brought to life on your server:
 - **Team Selection** — Easily choose your side and jump straight into the action.
 - **In-Game Menus** — Intuitive, interactive menus make managing your game effortless.
 - **GameRule Modifier** — Change Minecraft game rules derectly in a GUI.
+- **Boss Modes** — Slaying Ender Dragon is too easy? How about **Wither** or **Warden**?
 
 ---
 
@@ -31,9 +33,11 @@ The classic Manhunt experience, brought to life on your server:
 All features can be toggled in **Settings**
 
 ### Auto-Refresh Compass
+
 The compass will automatically refresh every 30 seconds.
 
 ### Speedrunner Bonus Time
+
 When the game starts, the speedrunners can have escape time before hunters are released.
 
 ---
@@ -46,26 +50,29 @@ Install the plugin and use the hotbar item to start!
 
 ## 📢 IMPORTANT
 
-The plugin is still in **EARLY** development, with many features planned. You can report bugs or suggestions in our [GitHub](https://github.com/TriBinary/TriHunt) page.
+The plugin is still in **EARLY** development, with many features planned. You can report bugs or suggestions in
+our [GitHub](https://github.com/TriBinary/TriHunt) page.
 
 ---
 
 ## 📝 Planned Features
 
 ### SPECIAL Modes
+
 **Armed**, **Infested** and **Assassin** mode.
 
-### Boss Mode
-Slaying Ender Dragon is too easy? How about **Wither** or **Warden**?
-
 ### Shop
+
 Exchange powerful weapons/utilities.
 
 ### Hunter Freeze
+
 Speedrunners can freeze hunters several times.
 
 ### One-Hit Axe
+
 A weapon to instantly kill hunters. Limited durability!
 
 ### MORE Loot
+
 Modify block/mob drop to speed up the pace.

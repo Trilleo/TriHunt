@@ -61,8 +61,14 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
         }
 
         if (TeamUtil.isInTeam(player, "speedrunner")) {
-            GameManager(plugin).endGame(false)
-            event.isCancelled = true
+            if (TeamUtil.getTeam("speedrunner")?.memberCount == 1) {
+                GameManager(plugin).endGame(false)
+                event.isCancelled = true
+            } else {
+                TeamUtil.addPlayer(player, "spectator")
+                GameManager(plugin).updatePlayerGameMode(player)
+                event.isCancelled = true
+            }
         }
     }
 
@@ -76,8 +82,30 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
     // Detect dragon death
     @EventHandler
     fun onDragonDeath(event: EntityDeathEvent) {
-        if (event.entity.type == EntityType.ENDER_DRAGON) {
-            GameManager(plugin).endGame(true)
+        val serverData = ServerDataManager.get()
+
+        if (serverData.getString("gameStatus") == "active") {
+            if (serverData.getString(
+                    "bossModes",
+                    "ender-dragon"
+                ) == "ender-dragon" && event.entityType == EntityType.ENDER_DRAGON
+            ) {
+                GameManager(plugin).endGame(true)
+            }
+            if (serverData.getString(
+                    "bossModes",
+                    "ender-dragon"
+                ) == "wither" && event.entityType == EntityType.WITHER
+            ) {
+                GameManager(plugin).endGame(true)
+            }
+            if (serverData.getString(
+                    "bossModes",
+                    "ender-dragon"
+                ) == "warden" && event.entityType == EntityType.WARDEN
+            ) {
+                GameManager(plugin).endGame(true)
+            }
         }
     }
 
