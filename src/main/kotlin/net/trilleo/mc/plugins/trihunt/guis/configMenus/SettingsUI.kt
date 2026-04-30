@@ -1,4 +1,4 @@
-package net.trilleo.mc.plugins.trihunt.guis.mainMenus
+package net.trilleo.mc.plugins.trihunt.guis.configMenus
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -15,6 +15,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemFlag
 
 class SettingsUI : PluginGUI(
     id = "settings",
@@ -24,7 +25,9 @@ class SettingsUI : PluginGUI(
 ) {
     val slotIndex: Map<String, Int> = mapOf(
         "backButtonSlot" to 48,
-        "closeButtonSlot" to 49
+        "closeButtonSlot" to 49,
+        "gameRuleButtonSlot" to 53,
+        "gameModeButtonSlot" to 45
     )
     val settingsIndex: Map<String, Int> = mapOf(
         "autoRefreshCompass" to 10,
@@ -74,9 +77,26 @@ class SettingsUI : PluginGUI(
         val backButton = itemStack(Material.ARROW) {
             name("<bold><gray>Back")
         }
+        val gameRuleButton = itemStack(Material.GRASS_BLOCK) {
+            name("<bold><yellow>GameRule Modifier")
+            lore(
+                "   ",
+                "<gray>Change Minecraft game rules"
+            )
+        }
+        val gameModeButton = itemStack(Material.DIAMOND_SPEAR) {
+            name("<bold><dark_red>TriHunt Modes")
+            lore(
+                "   ",
+                "<gray>Change TriHunt game modes"
+            )
+            flag(ItemFlag.HIDE_ATTRIBUTES)
+        }
 
         inventory.setItem(slotIndex.getValue("backButtonSlot"), backButton)
         inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
+        inventory.setItem(slotIndex.getValue("gameRuleButtonSlot"), gameRuleButton)
+        inventory.setItem(slotIndex.getValue("gameModeButtonSlot"), gameModeButton)
 
         refreshSettings(inventory)
     }
@@ -102,6 +122,12 @@ class SettingsUI : PluginGUI(
         }
         if (event.slot == slotIndex.getValue("backButtonSlot")) {
             GUIManager.open(player, "main")
+        }
+        if (event.slot == slotIndex.getValue("gameRuleButtonSlot")) {
+            GUIManager.open(player, "gamerule")
+        }
+        if (event.slot == slotIndex.getValue("gameModeButtonSlot")) {
+            GUIManager.open(player, "gamemode")
         }
 
         if (event.slot == settingsIndex.getValue("autoRefreshCompass")) {

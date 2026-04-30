@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.trilleo"
-version = "0.2.0"
+version = "0.3.0"
 
 idea {
     module {
@@ -36,12 +36,6 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
-}
-
-tasks.processResources {
-    filesMatching("*.yml") {
-        expand("projectVersion" to project.version)
-    }
 }
 
 tasks.jar {
