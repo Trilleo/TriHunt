@@ -33,9 +33,13 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
         val backButton = itemStack(Material.ARROW) {
             name("<bold><gray>Back")
         }
+        val wipButton = itemStack(Material.RED_WOOL) {
+            name("<bold><red>Work-in-Progress")
+        }
 
         inventory.setItem(slotIndex.getValue("backButtonSlot"), backButton)
         inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
+        inventory.setItem(13, wipButton)
     }
 
     override fun onClick(event: InventoryClickEvent) {
