@@ -2,7 +2,7 @@
   TriHunt: Modern Manhunt Plugin
 </h1>
 
-**TriHunt** is a Manhunt plugin for Minecraft, developed by **Trilleo**. One team runs. The other hunts. The game ends when the Speedrunnersunners beat the Ender Dragon — or when the Hunters stop them first.
+**TriHunt** is a Manhunt plugin for Minecraft 26.1.2 **Paper** server, developed by **Trilleo**. One team runs. The other hunts. The game ends when the Speedrunnersunners beat the Ender Dragon — or when the Hunters stop them first.
 
 ---
 
