@@ -10,6 +10,7 @@ import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
+import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -129,7 +130,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
         }
 
         if (event.slot == modeIndex.getValue("specialModesSlot")) {
-            TODO()
+            player.sendPrefixed("<red>More modes coming soon...")
         }
         if (event.slot == modeIndex.getValue("bossModesSlot")) {
             val serverData = ServerDataManager.get()
