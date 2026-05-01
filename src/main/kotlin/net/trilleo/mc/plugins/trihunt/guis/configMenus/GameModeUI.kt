@@ -47,6 +47,15 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                 )
                 flag(ItemFlag.HIDE_ATTRIBUTES)
             }
+            "infested" -> itemStack(Material.REDSTONE_TORCH) {
+                name("<bold><gold>Special Modes")
+                lore(
+                    "   ",
+                    "<white>Selected: <red>Infested",
+                    "   ",
+                    "<gray>If a speedrunner die, he will become a hunter"
+                )
+            }
 
             else -> {
                 itemStack(Material.GRAY_STAINED_GLASS_PANE) {
@@ -132,7 +141,16 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
         }
 
         if (event.slot == modeIndex.getValue("specialModesSlot")) {
-            player.sendPrefixed("<red>More modes coming soon...")
+            val serverData = ServerDataManager.get()
+            val nextMode = when (serverData.getString("specialModes", "regular")) {
+                "regular" -> "infested"
+                "infested" -> "regular"
+
+                else -> "regular"
+            }
+
+            serverData.set("specialModes", nextMode)
+            refreshModes(event.inventory)
         }
         if (event.slot == modeIndex.getValue("bossModesSlot")) {
             val serverData = ServerDataManager.get()
