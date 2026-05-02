@@ -1,4 +1,4 @@
 # TriHunt Configuration
 
-# A friendly prefix shown before plugin messages
-message-prefix: "[TriHunt]"
+# A friendly prefix shown before plugin messages (Support MiniMessages)
+message-prefix: "<click:suggest_command:/trihunt><gradient:yellow:gold>[TriHunt]"
