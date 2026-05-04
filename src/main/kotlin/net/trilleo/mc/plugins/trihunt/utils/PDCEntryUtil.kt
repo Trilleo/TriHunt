@@ -17,5 +17,8 @@ class PDCEntryUtil {
 
         // itemIdentifier - Hunter Compass
         val compassItemIdentifier = "hunter-compass"
+
+        // itemIdentifier - Bridge Egg
+        val bridgeEggItemIdentifier = "bridge-egg"
     }
 }
