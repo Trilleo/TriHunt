@@ -20,5 +20,8 @@ class PDCEntryUtil {
 
         // itemIdentifier - Bridge Egg
         val bridgeEggItemIdentifier = "bridge-egg"
+
+        // itemIdentifier - Shootable Fireball
+        val shootableFireballItemIdentifier = "shootable-fireball"
     }
 }
