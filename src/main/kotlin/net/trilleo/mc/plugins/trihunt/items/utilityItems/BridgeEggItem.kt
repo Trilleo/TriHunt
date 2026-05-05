@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class BridgeEggItem(private val plugin: JavaPlugin) : PluginItem("bridge-egg") {
     override fun buildItem(amount: Int): ItemStack = itemStack(Material.EGG) {
-        name("<yellow>Bridge Egg")
+        name("<#a53860>Bridge Egg")
         lore(
             "<gray>A throwable egg that creates a bridge.",
             "<gray>Useful for crossing gaps!"
