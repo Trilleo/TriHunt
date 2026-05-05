@@ -33,6 +33,7 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
         "creditsButtonSlot" to 15,
         "settingsButtonSlot" to 11,
         "teamSelectButtonSlot" to 31,
+        "recipeBookButtonSlot" to 53,
         "closeButtonSlot" to 49
     )
 
@@ -75,7 +76,7 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
                 "<dark_gray>====================="
             )
         }
-        val teamSelectButton = itemStack(Material.BOOK) {
+        val teamSelectButton = itemStack(Material.DIAMOND_SWORD) {
             name("<bold><dark_blue>Team")
             lore(
                 " ",
@@ -85,12 +86,23 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
                 "   ",
                 "<white>Current team: ${TeamUtil.getPlayerTeam(player)?.displayName ?: "<dark_gray>None"}"
             )
+            flag(ItemFlag.HIDE_ATTRIBUTES)
+        }
+        val recipeBookButton = itemStack(Material.ENCHANTED_BOOK) {
+            name("<bold><dark_green>Recipe Book")
+            lore(
+                " ",
+                "<dark_gray>=====================",
+                "<gray>View plugin recipes",
+                "<dark_gray>====================="
+            )
         }
 
         inventory.setItem(slotIndex.getValue("startButtonSlot"), startButton)
         inventory.setItem(slotIndex.getValue("creditsButtonSlot"), creditsButton)
         inventory.setItem(slotIndex.getValue("settingsButtonSlot"), settingsButton)
         inventory.setItem(slotIndex.getValue("teamSelectButtonSlot"), teamSelectButton)
+        inventory.setItem(slotIndex.getValue("recipeBookButtonSlot"), recipeBookButton)
         inventory.setItem(slotIndex.getValue("closeButtonSlot"), closeButton)
     }
 
@@ -114,6 +126,9 @@ class MainUI(private val plugin: JavaPlugin) : PluginGUI(
         }
         if (event.slot == slotIndex.getValue("teamSelectButtonSlot")) {
             GUIManager.open(player, "team-select")
+        }
+        if (event.slot == slotIndex.getValue("recipeBookButtonSlot")) {
+            GUIManager.open(player, "recipe-book")
         }
         if (event.slot == slotIndex.getValue("startButtonSlot")) {
             player.closeInventory()
