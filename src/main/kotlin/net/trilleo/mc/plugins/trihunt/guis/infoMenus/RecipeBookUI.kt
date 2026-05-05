@@ -24,7 +24,7 @@ import org.bukkit.inventory.*
  */
 class RecipeBookUI : PagedPluginGUI(
     id = "recipe-book",
-    title = Component.text("Recipe Book").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
+    title = Component.text("Recipe Book").color(NamedTextColor.DARK_GREEN).decorate(TextDecoration.BOLD),
     rows = 6
 ) {
     private companion object {
@@ -60,11 +60,13 @@ class RecipeBookUI : PagedPluginGUI(
             val meta = icon.itemMeta ?: return@map icon
             val existingLore = meta.lore() ?: emptyList()
             val separator = MM.deserialize("<reset><i:false><dark_gray>──────────────")
-            val typeLine = MM.deserialize("<reset><i:false><gray>Type: <yellow>${recipeTypeName(recipe)}")
-            val hintLine = MM.deserialize("<reset><i:false><gray>Click to view recipe")
+            val typeLine = MM.deserialize("<reset><i:false><white>Type: <yellow><bold>${recipeTypeName(recipe)}")
+            val blankLine = Component.empty()
+            val hintLine = MM.deserialize("<reset><i:false><gray>[Click] to view recipe")
             val newLore = existingLore.toMutableList().also { lore ->
                 if (lore.isNotEmpty()) lore.add(separator)
                 lore.add(typeLine)
+                lore.add(blankLine)
                 lore.add(hintLine)
             }
             meta.lore(newLore)
