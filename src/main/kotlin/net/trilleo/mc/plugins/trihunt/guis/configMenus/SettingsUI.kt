@@ -68,16 +68,12 @@ class SettingsUI(private val plugin: JavaPlugin) : PluginGUI(
                 "<gray>[Right Click] <dark_gray>to increase by 1"
             )
         }
-
-        inventory.setItem(settingsIndex.getValue("autoRefreshCompass"), autoRefreshCompassButton)
-        inventory.setItem(settingsIndex.getValue("speedrunnerBonusTime"), speedrunnerBonusTimeButton)
-
         val isCustomItems = serverData.getBoolean("customItems", true)
         val customItemsButton = itemStack(Material.CRAFTING_TABLE) {
-            name("<bold><white>Custom Items")
+            name("<bold><white>Custom Items / Recipes")
             lore(
                 "   ",
-                "<gray>Register custom crafting recipes",
+                "<gray>Register custom items and crafting recipes",
                 "   ",
                 "<white>Value: <yellow>$isCustomItems",
                 "   ",
@@ -85,6 +81,8 @@ class SettingsUI(private val plugin: JavaPlugin) : PluginGUI(
             )
         }
 
+        inventory.setItem(settingsIndex.getValue("autoRefreshCompass"), autoRefreshCompassButton)
+        inventory.setItem(settingsIndex.getValue("speedrunnerBonusTime"), speedrunnerBonusTimeButton)
         inventory.setItem(settingsIndex.getValue("customItems"), customItemsButton)
     }
 
