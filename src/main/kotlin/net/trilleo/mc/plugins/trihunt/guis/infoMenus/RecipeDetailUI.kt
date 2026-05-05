@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
+import net.trilleo.mc.plugins.trihunt.guis.infoMenus.RecipeDetailUI.Companion.setPendingRecipe
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
@@ -13,20 +14,8 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.BlastingRecipe
-import org.bukkit.inventory.CampfireRecipe
-import org.bukkit.inventory.CookingRecipe
-import org.bukkit.inventory.FurnaceRecipe
-import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.RecipeChoice
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.inventory.ShapelessRecipe
-import org.bukkit.inventory.SmithingTransformRecipe
-import org.bukkit.inventory.SmokingRecipe
-import org.bukkit.inventory.StonecuttingRecipe
-import java.util.UUID
+import org.bukkit.inventory.*
+import java.util.*
 
 /**
  * Displays the full details of a single plugin recipe in a 6-row inventory.

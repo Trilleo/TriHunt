@@ -12,16 +12,7 @@ import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.BlastingRecipe
-import org.bukkit.inventory.CampfireRecipe
-import org.bukkit.inventory.FurnaceRecipe
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.Recipe
-import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.inventory.ShapelessRecipe
-import org.bukkit.inventory.SmithingTransformRecipe
-import org.bukkit.inventory.SmokingRecipe
-import org.bukkit.inventory.StonecuttingRecipe
+import org.bukkit.inventory.*
 
 /**
  * A paged GUI that lists every plugin recipe, sorted alphabetically by
