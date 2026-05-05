@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class ShootableFireballItem(private val plugin: JavaPlugin) : PluginItem("shootable-fireball") {
     override fun buildItem(amount: Int): ItemStack = itemStack(Material.FIRE_CHARGE) {
-        name("<@a53860>Shootable Fireball")
+        name("<#a53860>Shootable Fireball")
         lore(
             "<gray>A fire charge that shoots a fireball when used.",
             "<gray>Useful for attacking or lighting up areas!"
