@@ -23,5 +23,8 @@ class PDCEntryUtil {
 
         // itemIdentifier - Shootable Fireball
         val shootableFireballItemIdentifier = "shootable-fireball"
+
+        // itemIdentifier - Golden Head
+        val goldenHeadItemIdentifier = "golden-head"
     }
 }
