@@ -1,4 +1,4 @@
-package net.trilleo.mc.plugins.trihunt.items
+package net.trilleo.mc.plugins.trihunt.items.pluginItems
 
 import net.trilleo.mc.plugins.trihunt.registration.PluginItem
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
@@ -10,19 +10,19 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
-class BridgeEggItem(private val plugin: JavaPlugin) : PluginItem("bridge-egg") {
-    override fun buildItem(amount: Int): ItemStack = itemStack(Material.EGG) {
-        name("<yellow>Bridge Egg")
+class MainItem(private val plugin: JavaPlugin) : PluginItem("main-item") {
+    override fun buildItem(amount: Int): ItemStack = itemStack(Material.NETHER_STAR) {
+        name("<bold><gold>TriHunt Menu")
         lore(
-            "<gray>A throwable egg that creates a bridge.",
-            "<gray>Useful for crossing gaps!"
+            "   ",
+            "<gray>[Right Click] to open menu"
         )
-        enchant(Enchantment.DENSITY, 1)
+        enchant(Enchantment.BINDING_CURSE, 1)
         flag(ItemFlag.HIDE_ENCHANTS)
         pdc(
             PDCEntryUtil.PDCKey(plugin).itemIdentifierKey,
             PersistentDataType.STRING,
-            PDCEntryUtil.PDCValue().bridgeEggItemIdentifier
+            PDCEntryUtil.PDCValue().mainItemIdentifier
         )
     }
 }

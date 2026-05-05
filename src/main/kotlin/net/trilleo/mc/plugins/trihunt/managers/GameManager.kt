@@ -9,8 +9,8 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.title.Title
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.enums.DisplayLocation
-import net.trilleo.mc.plugins.trihunt.items.MainItem
-import net.trilleo.mc.plugins.trihunt.items.TrackerCompassItem
+import net.trilleo.mc.plugins.trihunt.items.pluginItems.MainItem
+import net.trilleo.mc.plugins.trihunt.items.pluginItems.TrackerCompassItem
 import net.trilleo.mc.plugins.trihunt.utils.CountdownUtil
 import net.trilleo.mc.plugins.trihunt.utils.TeamUtil
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
