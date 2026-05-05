@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar.registerAll
 import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar.unregisterAll
 import org.bukkit.Bukkit
@@ -36,6 +37,13 @@ object RecipeRegistrar {
      */
     fun registerAll(plugin: JavaPlugin) {
         unregisterAll()
+
+        val serverData = ServerDataManager.get()
+
+        if (!serverData.getBoolean("customItems", true)) {
+            plugin.logger.info("Custom Recipes set to false. Skipping...")
+            return
+        }
 
         val recipeClasses = PackageScanner.findClasses(plugin, RECIPES_PACKAGE, PluginRecipe::class.java)
 
