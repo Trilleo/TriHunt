@@ -64,6 +64,16 @@ object RecipeRegistrar {
     }
 
     /**
+     * Returns an immutable snapshot of the [NamespacedKey]s for every recipe
+     * successfully registered by [registerAll].
+     *
+     * The returned list preserves registration order and can be used to
+     * retrieve the actual [org.bukkit.inventory.Recipe] objects via
+     * [org.bukkit.Bukkit.getRecipe].
+     */
+    fun getRegisteredKeys(): List<NamespacedKey> = registeredKeys.toList()
+
+    /**
      * Removes all recipes registered by [registerAll] from the server.
      *
      * Should be called from [JavaPlugin.onDisable] to prevent stale recipes
