@@ -36,7 +36,10 @@ class RecipeBookUI : PagedPluginGUI(
     title = Component.text("Recipe Book").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
     rows = 6
 ) {
-    private val mm = MiniMessage.miniMessage()
+    private companion object {
+        val MM: MiniMessage = MiniMessage.miniMessage()
+        val MM_TAG_PATTERN = Regex("<[^>]*>")
+    }
 
     /** Returns all registered plugin recipes sorted alphabetically by result name. */
     private fun sortedRecipes(): List<Recipe> =
@@ -44,7 +47,7 @@ class RecipeBookUI : PagedPluginGUI(
             .mapNotNull { key -> Bukkit.getRecipe(key) }
             .sortedBy { recipe ->
                 val name = recipe.result.itemMeta?.displayName()
-                if (name != null) mm.serialize(name).replace("<[^>]*>".toRegex(), "").lowercase()
+                if (name != null) MM.serialize(name).replace(MM_TAG_PATTERN, "").lowercase()
                 else recipe.result.type.name.lowercase()
             }
 
@@ -65,9 +68,9 @@ class RecipeBookUI : PagedPluginGUI(
             val icon = recipe.result.clone().also { it.amount = 1 }
             val meta = icon.itemMeta ?: return@map icon
             val existingLore = meta.lore() ?: emptyList()
-            val separator = mm.deserialize("<reset><i:false><dark_gray>──────────────")
-            val typeLine = mm.deserialize("<reset><i:false><gray>Type: <yellow>${recipeTypeName(recipe)}")
-            val hintLine = mm.deserialize("<reset><i:false><gray>Click to view recipe")
+            val separator = MM.deserialize("<reset><i:false><dark_gray>──────────────")
+            val typeLine = MM.deserialize("<reset><i:false><gray>Type: <yellow>${recipeTypeName(recipe)}")
+            val hintLine = MM.deserialize("<reset><i:false><gray>Click to view recipe")
             val newLore = existingLore.toMutableList().also { lore ->
                 if (lore.isNotEmpty()) lore.add(separator)
                 lore.add(typeLine)
