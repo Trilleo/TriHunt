@@ -24,6 +24,7 @@ The classic Manhunt experience, brought to life on your server:
 - **Team Selection** — Easily choose your side and jump straight into action.
 - **In-Game Menus** — Intuitive, interactive menus make managing your game effortless.
 - **GameRule Modifier** — Change Minecraft game rules directly in a GUI.
+- **Custom Items** — Unique items and recipes to spice up the gameplay.
 
 ---
 
@@ -53,6 +54,10 @@ The compass will automatically refresh every 30 seconds.
 ### Speedrunner Bonus Time
 
 When the game starts, the speedrunners can have escape time before hunters are released.
+
+### Custom Items / Recipes
+
+Custom items and recipes to enhance the gameplay experience.
 
 ---
 

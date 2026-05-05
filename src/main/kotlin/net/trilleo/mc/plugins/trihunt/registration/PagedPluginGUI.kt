@@ -136,7 +136,7 @@ abstract class PagedPluginGUI(
     open fun onContentClick(event: InventoryClickEvent, page: Int) {}
 
     /** The number of usable content slots per page (all rows except the last). */
-    private val contentSlots: Int
+    protected val contentSlots: Int
         get() = (rows - 1) * ROW_SIZE
 
     /** The first slot index of the navigation row (the last row). */
@@ -285,6 +285,23 @@ abstract class PagedPluginGUI(
         private const val PREVIOUS_OFFSET = 0
         private const val PAGE_INDICATOR_OFFSET = 4
         private const val NEXT_OFFSET = 8
+    }
+
+    /**
+     * Switches the player to the given [page] and re-renders the inventory
+     * without reopening it.
+     *
+     * Can be called externally (e.g. by [GUIManager.openAtPage]) to display
+     * a specific page immediately, avoiding the default page-0 render that
+     * [setup] would produce.
+     *
+     * @param player    the player whose view should be updated
+     * @param inventory the inventory currently open for the player
+     * @param page      the zero-based page index to jump to
+     */
+    fun jumpToPage(player: Player, inventory: Inventory, page: Int) {
+        playerPages[player.uniqueId] = page
+        renderPage(player, inventory, page)
     }
 
     /**

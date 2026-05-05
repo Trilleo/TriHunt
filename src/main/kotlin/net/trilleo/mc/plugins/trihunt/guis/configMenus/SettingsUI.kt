@@ -9,6 +9,7 @@ import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
 import net.trilleo.mc.plugins.trihunt.registration.GUIManager
 import net.trilleo.mc.plugins.trihunt.registration.PluginGUI
+import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import net.trilleo.mc.plugins.trihunt.utils.sendPrefixed
 import org.bukkit.Material
@@ -16,8 +17,9 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.plugin.java.JavaPlugin
 
-class SettingsUI : PluginGUI(
+class SettingsUI(private val plugin: JavaPlugin) : PluginGUI(
     id = "settings",
     title = Component.text("TriHunt Settings").color(NamedTextColor.DARK_GRAY).decorate(TextDecoration.BOLD),
     rows = 6,
@@ -31,7 +33,8 @@ class SettingsUI : PluginGUI(
     )
     val settingsIndex: Map<String, Int> = mapOf(
         "autoRefreshCompass" to 10,
-        "speedrunnerBonusTime" to 12
+        "speedrunnerBonusTime" to 12,
+        "customItems" to 14
     )
 
     fun refreshSettings(inventory: Inventory) {
@@ -65,9 +68,22 @@ class SettingsUI : PluginGUI(
                 "<gray>[Right Click] <dark_gray>to increase by 1"
             )
         }
+        val isCustomItems = serverData.getBoolean("customItems", true)
+        val customItemsButton = itemStack(Material.CRAFTING_TABLE) {
+            name("<bold><white>Custom Items / Recipes")
+            lore(
+                "   ",
+                "<gray>Register custom items and crafting recipes",
+                "   ",
+                "<white>Value: <yellow>$isCustomItems",
+                "   ",
+                "<gray>[Click] <dark_gray>to toggle"
+            )
+        }
 
         inventory.setItem(settingsIndex.getValue("autoRefreshCompass"), autoRefreshCompassButton)
         inventory.setItem(settingsIndex.getValue("speedrunnerBonusTime"), speedrunnerBonusTimeButton)
+        inventory.setItem(settingsIndex.getValue("customItems"), customItemsButton)
     }
 
     override fun setup(player: Player, inventory: Inventory) {
@@ -159,6 +175,19 @@ class SettingsUI : PluginGUI(
                 }
 
                 serverData.set("speedrunnerBonusTime", speedrunnerBonusTime + 1)
+            }
+
+            refreshSettings(event.inventory)
+        }
+        if (event.slot == settingsIndex.getValue("customItems")) {
+            val isCustomItems = serverData.getBoolean("customItems", true)
+
+            if (isCustomItems) {
+                serverData.set("customItems", false)
+                RecipeRegistrar.unregisterAll()
+            } else {
+                serverData.set("customItems", true)
+                RecipeRegistrar.registerAll(plugin)
             }
 
             refreshSettings(event.inventory)

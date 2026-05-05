@@ -1,5 +1,6 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
+import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar.registerAll
 import net.trilleo.mc.plugins.trihunt.registration.RecipeRegistrar.unregisterAll
 import org.bukkit.Bukkit
@@ -37,6 +38,13 @@ object RecipeRegistrar {
     fun registerAll(plugin: JavaPlugin) {
         unregisterAll()
 
+        val serverData = ServerDataManager.get()
+
+        if (!serverData.getBoolean("customItems", true)) {
+            plugin.logger.info("Custom Recipes set to false. Skipping...")
+            return
+        }
+
         val recipeClasses = PackageScanner.findClasses(plugin, RECIPES_PACKAGE, PluginRecipe::class.java)
 
         for (recipeClass in recipeClasses) {
@@ -62,6 +70,16 @@ object RecipeRegistrar {
 
         plugin.logger.info("Registered ${registeredKeys.size} recipe(s)")
     }
+
+    /**
+     * Returns an immutable snapshot of the [NamespacedKey]s for every recipe
+     * successfully registered by [registerAll].
+     *
+     * The returned list preserves registration order and can be used to
+     * retrieve the actual [org.bukkit.inventory.Recipe] objects via
+     * [org.bukkit.Bukkit.getRecipe].
+     */
+    fun getRegisteredKeys(): List<NamespacedKey> = registeredKeys.toList()
 
     /**
      * Removes all recipes registered by [registerAll] from the server.

@@ -1,6 +1,7 @@
 package net.trilleo.mc.plugins.trihunt.registration
 
 import net.trilleo.mc.plugins.trihunt.enums.FillMode
+import net.trilleo.mc.plugins.trihunt.registration.GUIManager.open
 import net.trilleo.mc.plugins.trihunt.utils.itemStack
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -68,6 +69,30 @@ object GUIManager : Listener {
         val inventory = Bukkit.createInventory(null, gui.rows * 9, gui.title)
         fillInventory(gui, inventory)
         gui.setup(player, inventory)
+        openGUIs[player] = Pair(gui, inventory)
+        player.openInventory(inventory)
+        return true
+    }
+
+    /**
+     * Opens a registered [PagedPluginGUI] for the given player starting at
+     * the specified page.  The inventory is fully rendered at [page] before
+     * being shown, so the player never sees an intermediate page-0 state.
+     *
+     * Falls back to [open] when the target GUI is not a [PagedPluginGUI] or
+     * does not exist.
+     *
+     * @param player the player to open the GUI for
+     * @param id     the unique identifier of the GUI to open
+     * @param page   the zero-based page index to start at
+     * @return `true` if the GUI was found and opened, `false` otherwise
+     */
+    fun openAtPage(player: Player, id: String, page: Int): Boolean {
+        val gui = guis[id] as? PagedPluginGUI ?: return open(player, id)
+        val inventory = Bukkit.createInventory(null, gui.rows * 9, gui.title)
+        fillInventory(gui, inventory)
+        gui.setup(player, inventory)
+        gui.jumpToPage(player, inventory, page)
         openGUIs[player] = Pair(gui, inventory)
         player.openInventory(inventory)
         return true
