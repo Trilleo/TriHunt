@@ -64,7 +64,9 @@ class RecipeBookUI : PagedPluginGUI(
             val blankLine = Component.empty()
             val hintLine = MM.deserialize("<reset><i:false><gray>[Click] to view recipe")
             val newLore = existingLore.toMutableList().also { lore ->
+                if (lore.isNotEmpty()) lore.add(blankLine)
                 if (lore.isNotEmpty()) lore.add(separator)
+                lore.add(blankLine)
                 lore.add(typeLine)
                 lore.add(blankLine)
                 lore.add(hintLine)

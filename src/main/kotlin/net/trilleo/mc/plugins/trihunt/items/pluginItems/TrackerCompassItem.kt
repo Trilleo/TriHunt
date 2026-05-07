@@ -1,4 +1,4 @@
-package net.trilleo.mc.plugins.trihunt.items
+package net.trilleo.mc.plugins.trihunt.items.pluginItems
 
 import net.trilleo.mc.plugins.trihunt.registration.PluginItem
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil

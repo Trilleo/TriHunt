@@ -36,6 +36,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly("com.mojang:authlib:6.0.54")
 }
 
 tasks.jar {

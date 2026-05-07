@@ -1,6 +1,6 @@
 package net.trilleo.mc.plugins.trihunt.recipes
 
-import net.trilleo.mc.plugins.trihunt.items.BridgeEggItem
+import net.trilleo.mc.plugins.trihunt.items.utilityItems.BridgeEggItem
 import net.trilleo.mc.plugins.trihunt.registration.PluginRecipe
 import org.bukkit.Material
 import org.bukkit.inventory.Recipe
