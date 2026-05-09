@@ -11,9 +11,9 @@ class SilexRecipe : PluginRecipe("silex-craft") {
     override fun build(plugin: JavaPlugin): Recipe {
         val recipe = ShapedRecipe(namespacedKey(plugin), SilexItem(plugin).create())
         recipe.shape(
-            "III",
+            " I ",
             "IFI",
-            "III"
+            " I "
         )
 
         recipe.setIngredient('I', vanillaChoice(Material.IRON_INGOT))
