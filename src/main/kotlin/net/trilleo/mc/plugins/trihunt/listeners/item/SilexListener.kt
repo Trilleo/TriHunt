@@ -6,15 +6,19 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.trilleo.mc.plugins.trihunt.utils.PDCEntryUtil
 import net.trilleo.mc.plugins.trihunt.utils.PDCUtil
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.UUID
 
 class SilexListener(private val plugin: JavaPlugin) : Listener {
     // Detect Anvil combine
@@ -92,4 +96,80 @@ class SilexListener(private val plugin: JavaPlugin) : Listener {
         player.inventory.addItem(result)
     }
 
+    private val blockList = listOf(
+        Material.STONE,
+        Material.COAL_ORE,
+        Material.IRON_ORE,
+        Material.GOLD_ORE,
+        Material.DIAMOND_ORE,
+        Material.EMERALD_ORE,
+        Material.REDSTONE_ORE,
+        Material.LAPIS_ORE,
+        Material.COPPER_ORE,
+        Material.DEEPSLATE,
+        Material.DEEPSLATE_COAL_ORE,
+        Material.DEEPSLATE_IRON_ORE,
+        Material.DEEPSLATE_GOLD_ORE,
+        Material.DEEPSLATE_DIAMOND_ORE,
+        Material.DEEPSLATE_EMERALD_ORE,
+        Material.DEEPSLATE_REDSTONE_ORE,
+        Material.DEEPSLATE_LAPIS_ORE,
+        Material.DEEPSLATE_COPPER_ORE,
+        Material.NETHERRACK,
+        Material.NETHER_GOLD_ORE,
+        Material.NETHER_QUARTZ_ORE,
+        Material.ANCIENT_DEBRIS,
+        Material.DIORITE,
+        Material.ANDESITE
+    )
+
+    private val cooldownMillis = 100L
+    private val lastBrokeAt = mutableMapOf<UUID, Long>()
+
+    private fun breakAdjacent(player: Player, block: Block) {
+        val world = block.world
+        val blockType = block.type
+
+        for (dx in -1..1) {
+            for (dy in -1..1) {
+                for (dz in -1..1) {
+                    if (dx == 0 && dy == 0 && dz == 0) return
+                    val adjacentBlock = world.getBlockAt(
+                        block.x + dx,
+                        block.y + dy,
+                        block.z + dz
+                    )
+                    if (adjacentBlock.type == blockType) {
+                        adjacentBlock.breakNaturally(player.inventory.itemInMainHand)
+                    }
+                }
+            }
+        }
+    }
+
+    // Detect block break
+    @EventHandler
+    fun onBlockBreak(event: BlockBreakEvent) {
+        val player = event.player
+        val block = event.block
+        val item = player.inventory.itemInMainHand
+        if (player.gameMode == GameMode.CREATIVE) return
+
+        val now = System.currentTimeMillis()
+        val last = lastBrokeAt[player.uniqueId] ?: 0L
+        if (now - last < cooldownMillis) {
+            event.isCancelled = true
+            return
+        }
+        lastBrokeAt[player.uniqueId] = now
+
+        if (block.type in blockList && PDCUtil.get(
+                item,
+                PDCEntryUtil.PDCKey(plugin).silexEnrichedItemIdentifierKey,
+                PersistentDataType.BOOLEAN
+            ) == true
+        ) {
+            breakAdjacent(player, block)
+        }
+    }
 }
