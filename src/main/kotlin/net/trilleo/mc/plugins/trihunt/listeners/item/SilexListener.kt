@@ -18,7 +18,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent
 import org.bukkit.inventory.AnvilInventory
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.UUID
+import java.util.*
 
 class SilexListener(private val plugin: JavaPlugin) : Listener {
     // Detect Anvil combine
@@ -76,9 +76,16 @@ class SilexListener(private val plugin: JavaPlugin) : Listener {
         val inv = event.inventory
         val player = event.whoClicked as Player
         if (inv !is AnvilInventory) return
+        val upgradeItem = inv.getItem(1) ?: return
         if (event.rawSlot != 2) return
         val result = inv.getItem(2) ?: return
 
+        if (PDCUtil.get(
+                upgradeItem,
+                PDCEntryUtil.PDCKey(plugin).itemIdentifierKey,
+                PersistentDataType.STRING
+            ) != PDCEntryUtil.PDCValue().silexItemIdentifier
+        ) return
         if (PDCUtil.get(
                 result,
                 PDCEntryUtil.PDCKey(plugin).silexEnrichedItemIdentifierKey,
