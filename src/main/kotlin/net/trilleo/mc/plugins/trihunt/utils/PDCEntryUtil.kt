@@ -8,6 +8,9 @@ class PDCEntryUtil {
     class PDCKey(private val plugin: JavaPlugin) {
         // Key for identifying plugin items
         val itemIdentifierKey = NamespacedKey(plugin, "itemIdentifier")
+
+        // Key for Silex enriched items
+        val silexEnrichedItemIdentifierKey = NamespacedKey(plugin, "silexEnrichedItemIdentifier")
     }
 
     // Values
@@ -26,5 +29,11 @@ class PDCEntryUtil {
 
         // itemIdentifier - Golden Head
         val goldenHeadItemIdentifier = "golden-head"
+
+        // itemIdentifier - Silex
+        val silexItemIdentifier = "silex"
+
+        // silexEnrichedItemIdentifier
+        val isSilexEnrichedItemIdentifier = true
     }
 }
