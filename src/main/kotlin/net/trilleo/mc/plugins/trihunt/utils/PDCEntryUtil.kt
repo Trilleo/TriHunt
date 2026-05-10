@@ -33,6 +33,9 @@ class PDCEntryUtil {
         // itemIdentifier - Silex
         val silexItemIdentifier = "silex"
 
+        // itemIdentifier - Throwable TNT
+        val throwableTNTItemIdentifier = "throwable-tnt"
+
         // silexEnrichedItemIdentifier
         val isSilexEnrichedItemIdentifier = true
     }
