@@ -14,8 +14,10 @@ class KnockbackStickItem(private val plugin: JavaPlugin) : PluginItem("knockback
         lore(
             "<dark_gray>Consumed on Use",
             "   ",
-            "<gray>A stick that applies a strong knockback effect to the target when used.",
-            "<gray>Useful for pushing enemies away or creating distance!"
+            "<gray>A stick that applies a strong knockback",
+            "<gray>effect to the target when used.",
+            "<gray>Useful for pushing enemies away or creating",
+            "<gray>distance!"
         )
         enchant(Enchantment.KNOCKBACK, 5)
         pdc(
