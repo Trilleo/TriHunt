@@ -36,6 +36,9 @@ class PDCEntryUtil {
         // itemIdentifier - Throwable TNT
         val throwableTNTItemIdentifier = "throwable-tnt"
 
+        // itemIdentifier - Knockback Stick
+        val knockbackStickItemIdentifier = "knockback-stick"
+
         // silexEnrichedItemIdentifier
         val isSilexEnrichedItemIdentifier = true
     }
