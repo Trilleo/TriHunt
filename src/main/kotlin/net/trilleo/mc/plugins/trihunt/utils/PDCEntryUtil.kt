@@ -21,6 +21,9 @@ class PDCEntryUtil {
         // itemIdentifier - Hunter Compass
         val compassItemIdentifier = "hunter-compass"
 
+        // itemIdentifier - Assassin Sword
+        val assassinSwordItemIdentifier = "assassin-sword"
+
         // itemIdentifier - Bridge Egg
         val bridgeEggItemIdentifier = "bridge-egg"
 
