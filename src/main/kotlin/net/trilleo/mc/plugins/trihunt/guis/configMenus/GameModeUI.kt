@@ -42,7 +42,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                     "   ",
                     "<white>Selected: <green>Regular",
                     "   ",
-                    "<gray>The vanilla Manhunt experience"
+                    "<gray>The vanilla Manhunt experience."
                 )
                 flag(ItemFlag.HIDE_ATTRIBUTES)
             }
@@ -53,7 +53,18 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                     "   ",
                     "<white>Selected: <red>Infested",
                     "   ",
-                    "<gray>If a speedrunner die, he will become a hunter"
+                    "<gray>If a speedrunner die, he will become a hunter."
+                )
+            }
+
+            "assassin" -> itemStack(Material.REDSTONE) {
+                name("<bold><gold>Special Modes")
+                lore(
+                    "   ",
+                    "<white>Selected: <dark_red>Assassin",
+                    "   ",
+                    "<gray>Hunters get a sword that can one-hit speedrunners!",
+                    "<gray>Stare at a hunter to freeze him."
                 )
             }
 
@@ -70,7 +81,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                     "   ",
                     "<white>Selected: <bold><#7b2cbf>Ender Dragon",
                     "   ",
-                    "<gray>Speedrunners need to kill <#7b2cbf>Ender Dragon <gray>to win"
+                    "<gray>Speedrunners need to kill <#7b2cbf>Ender Dragon <gray>to win."
                 )
             }
 
@@ -80,7 +91,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                     "   ",
                     "<white>Selected: <bold><dark_gray>Wither",
                     "   ",
-                    "<gray>Speedrunners need to kill <dark_gray>Wither <gray>to win"
+                    "<gray>Speedrunners need to kill <dark_gray>Wither <gray>to win."
                 )
             }
 
@@ -90,7 +101,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
                     "   ",
                     "<white>Selected: <bold><dark_green>Warden",
                     "   ",
-                    "<gray>Speedrunners need to kill <dark_green>Warden <gray>to win"
+                    "<gray>Speedrunners need to kill <dark_green>Warden <gray>to win."
                 )
             }
 
@@ -144,7 +155,8 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
             val serverData = ServerDataManager.get()
             val nextMode = when (serverData.getString("specialModes", "regular")) {
                 "regular" -> "infested"
-                "infested" -> "regular"
+                "infested" -> "assassin"
+                "assassin" -> "regular"
 
                 else -> "regular"
             }
