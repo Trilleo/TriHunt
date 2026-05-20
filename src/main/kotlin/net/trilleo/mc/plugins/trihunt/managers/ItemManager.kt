@@ -15,7 +15,8 @@ class ItemManager(private val plugin: JavaPlugin) {
                     PersistentDataType.STRING
                 ) in listOf(
                     PDCEntryUtil.PDCValue().mainItemIdentifier,
-                    PDCEntryUtil.PDCValue().compassItemIdentifier
+                    PDCEntryUtil.PDCValue().compassItemIdentifier,
+                    PDCEntryUtil.PDCValue().assassinSwordItemIdentifier
                 )
             ) {
                 player.inventory.remove(item)

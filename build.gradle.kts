@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.trilleo"
-version = "0.6.0"
+version = "0.7.0"
 
 idea {
     module {
@@ -36,7 +36,6 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
-    compileOnly("com.mojang:authlib:6.0.54")
 }
 
 tasks.jar {

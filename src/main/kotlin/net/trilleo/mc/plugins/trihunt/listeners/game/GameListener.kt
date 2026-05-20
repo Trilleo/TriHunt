@@ -54,7 +54,8 @@ class GameListener(private val plugin: JavaPlugin) : Listener {
                     PersistentDataType.STRING
                 ) in listOf(
                     PDCEntryUtil.PDCValue().mainItemIdentifier,
-                    PDCEntryUtil.PDCValue().compassItemIdentifier
+                    PDCEntryUtil.PDCValue().compassItemIdentifier,
+                    PDCEntryUtil.PDCValue().assassinSwordItemIdentifier
                 )
             ) {
                 item.amount = 0

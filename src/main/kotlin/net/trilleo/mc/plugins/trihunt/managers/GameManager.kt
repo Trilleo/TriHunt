@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.title.Title
 import net.trilleo.mc.plugins.trihunt.data.ServerDataManager
 import net.trilleo.mc.plugins.trihunt.enums.DisplayLocation
+import net.trilleo.mc.plugins.trihunt.items.pluginItems.AssassinSwordItem
 import net.trilleo.mc.plugins.trihunt.items.pluginItems.MainItem
 import net.trilleo.mc.plugins.trihunt.items.pluginItems.TrackerCompassItem
 import net.trilleo.mc.plugins.trihunt.utils.CountdownUtil
@@ -266,12 +267,21 @@ class GameManager(private val plugin: JavaPlugin) {
         }
         if (serverData.getString("gameStatus") in listOf("ready", "active")) {
             val compassItem = TrackerCompassItem(plugin).create()
+            val assassinSwordItem = AssassinSwordItem(plugin).create()
 
             if (TeamUtil.isInTeam(player, "hunter")) {
                 if (player.inventory.getItem(8) == null) {
                     player.inventory.setItem(8, compassItem)
                 } else {
                     player.inventory.addItem(compassItem)
+                }
+
+                if (serverData.getString("specialModes") == "assassin") {
+                    if (player.inventory.getItem(0) == null) {
+                        player.inventory.setItem(0, assassinSwordItem)
+                    } else {
+                        player.inventory.addItem(assassinSwordItem)
+                    }
                 }
             }
         }
