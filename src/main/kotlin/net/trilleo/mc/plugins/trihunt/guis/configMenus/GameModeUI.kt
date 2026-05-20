@@ -155,8 +155,7 @@ class GameModeUI(private val plugin: JavaPlugin) : PluginGUI(
             val serverData = ServerDataManager.get()
             val nextMode = when (serverData.getString("specialModes", "regular")) {
                 "regular" -> "infested"
-                "infested" -> "assassin"
-                "assassin" -> "regular"
+                "infested" -> "regular"
 
                 else -> "regular"
             }
