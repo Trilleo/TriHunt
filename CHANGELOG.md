@@ -1,0 +1,3 @@
+# TriHunt - Change Log
+
+## Unreleased

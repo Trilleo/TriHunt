@@ -63,7 +63,8 @@ Custom items and recipes to enhance the gameplay experience.
 
 ## 🎮 Getting Started
 
-Install the plugin and use the hotbar item to start!
+Download the latest jar from the [releases page](https://github.com/Trilleo/TriHunt/releases), install the plugin and
+use the hotbar item to start! See the [change log](CHANGELOG.md) for what's new in each release.
 
 ---
 
